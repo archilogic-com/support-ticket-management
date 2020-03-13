@@ -23,7 +23,6 @@ const TicketList = (props: TicketListProps) => {
         }
 
         const ticketDate = moment(createdAt)
-        const oneDayAfter = moment().add(1, 'day')
 
         const ticketDuration = moment.duration(moment().diff(ticketDate))
 

@@ -105,7 +105,7 @@ function App() {
   const [ticketsFiltered, setTicketsFiltered] = useState<any>([])
 
   useEffect(() => {
-    tickets.sort((a, b) => (a.status > b.status) ? 1 : (a.status === b.status) ? ((moment(a.createdAt).isBefore(moment(b.createdAt))) ? 1 : -1) : -1 )
+    tickets.sort((a, b) => (a.status > b.status) ? 1 : (a.status === b.status) ? ((moment(b.createdAt).isBefore(moment(a.createdAt))) ? 1 : -1) : -1 )
     setTicketsFiltered(tickets)
   }, [])
 
