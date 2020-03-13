@@ -30,7 +30,7 @@ const TicketList = (props: TicketListProps) => {
             key: 'description',
         },
         {
-            title: 'Date',
+            title: 'Submited',
             dataIndex: 'createdAt',
             key: 'createdAt',
             render: (date: string) => <CreatedAt date={date} />

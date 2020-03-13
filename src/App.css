@@ -6,8 +6,8 @@ body, #root, .App, .ant-layout {
   background-color: rgb(40, 44, 52);
 }
 
-.content{
-  /* height: 400px; */
+.side{
+  padding: 10px;
 }
 
 .logo {
@@ -16,4 +16,10 @@ body, #root, .App, .ant-layout {
   color: #fff;
   font-size: 20px;
   vertical-align: middle;
+}
+
+.filters-container{
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
 }
