@@ -4,6 +4,7 @@ export interface StatusColor {
 
 export interface TicketTagProps {
     status: string
+    createdAt: string
 }
 
 export interface CreatedAtProps {

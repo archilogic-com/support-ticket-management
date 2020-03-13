@@ -15,7 +15,26 @@ const TicketList = (props: TicketListProps) => {
         "Resolved": 'green'
     }
 
-    const TicketTag = (props: TicketTagProps) => <Tag color={statusColor[props.status]}>{props.status}</Tag>
+    const resolveTicketColor = (status: string, createdAt: string): string => {
+//statusColor[props.status]
+
+        if(status === 'Resolved'){
+            return 'green'
+        }
+
+        const ticketDate = moment(createdAt)
+        const oneDayAfter = moment().add(1, 'day')
+
+        const ticketDuration = moment.duration(moment().diff(ticketDate))
+
+        if(ticketDuration.asDays() < 2){
+            return 'gold'
+        }
+
+        return 'red'
+    }
+
+    const TicketTag = (props: TicketTagProps) => <Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
     const CreatedAt = (props: CreatedAtProps) => <Tooltip title={moment(props.date).format('MM/DD/YYYY LT')}>{moment(props.date).fromNow()}</Tooltip>
 
     const columns = [
@@ -39,7 +58,7 @@ const TicketList = (props: TicketListProps) => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => <TicketTag status={status} />
+            render: (status: string, record: any) => <TicketTag status={status} createdAt={record.createdAt} />
         },
     ];
 
