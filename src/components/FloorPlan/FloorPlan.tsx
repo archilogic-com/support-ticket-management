@@ -103,14 +103,6 @@ const FloorPlan = (props: FloorPlanProps) => {
     }
 
 
-    const clearSpacesColor = () => {
-        spaces.forEach((space: any) => {
-            space.node.setHighlight({
-                fill: undefined
-            });
-        });
-    }
-
     const findSpaceById = (id: string) => {
         return spaces.find(space => {
             return space.id === id
