@@ -5,7 +5,7 @@ import './App.css';
 import { Row, Col, Layout, Select, Button, Divider, Drawer } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
 import { assignSpacesToTickets } from 'data/ticketsData'
-import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId, selectTicket } from 'reducers/tickets';
+import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId, selectTicket, filterByStatus } from 'reducers/tickets';
 import { SpacesState, selectSpace } from 'reducers/spaces';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
@@ -16,7 +16,6 @@ type Props = PropsFromRedux
 
 const App = (props: Props) => {
   const [sceneId, setSceneId] = useState<any>()
-
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -30,6 +29,7 @@ const App = (props: Props) => {
     if (props.selectedSpace === null) {
       return
     }
+    props.setTickets(props.originalTickets)
     props.filterTicketsBySpaceId(props.selectedSpace.id)
   }, [props.selectedSpace])
 
@@ -38,8 +38,13 @@ const App = (props: Props) => {
     props.selectSpace(null)
   }
 
-  const disableClearFilters = (): boolean => {
-    return props.selectedSpace === null
+  const onStatusChange = (value: string) => {
+    if (value === 'all') {
+      props.setTickets(props.originalTickets)
+      return
+    }
+    props.filterByStatus(value)
+
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
@@ -47,7 +52,7 @@ const App = (props: Props) => {
     const tickets = assignSpacesToTickets(spaces)
     props.initTickets(tickets)
   }
-  
+
 
   return (
     <Layout>
@@ -68,10 +73,10 @@ const App = (props: Props) => {
           <Col span={8} className="side">
             <Row>
               <Col span={24} className="filters-container">
-                <Select style={{ width: 120 }} placeholder="Show" size="small" >
+                <Select style={{ width: 120 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
                   <Option value="all">All</Option>
-                  <Option value="open">Open</Option>
-                  <Option value="resolved">Resolved</Option>
+                  <Option value="Open">Open</Option>
+                  <Option value="Resolved">Resolved</Option>
                 </Select>
                 <Divider type="vertical" />
                 <Select style={{ width: 120 }} placeholder="Time range" size="small" >
@@ -82,7 +87,7 @@ const App = (props: Props) => {
                   <Option value="72-more">> 72 hours</Option>
                 </Select>
                 <Divider type="vertical" />
-                <Button size="small" danger onClick={onClearFilters} disabled={disableClearFilters()}>Clear Filters</Button>
+                <Button size="small" danger onClick={onClearFilters} disabled={!props.filterApplied}>Clear Filters</Button>
               </Col>
               <Col span={24}>
                 <TicketList tickets={props.tickets} />
@@ -90,7 +95,7 @@ const App = (props: Props) => {
                   title="Basic Drawer"
                   placement="right"
                   visible={/*props.ticketSelected !== null*/false}
-                  onClose={ () => props.selectTicket(null)}
+                  onClose={() => props.selectTicket(null)}
                 >
                   <p>Some contents...</p>
                   <p>Some contents...</p>
@@ -115,7 +120,9 @@ const mapState = (state: RootState) => ({
   tickets: state.tickets.tickets,
   originalTickets: state.tickets.originalTickets,
   selectedSpace: state.spaces.selectedSpace,
-  ticketSelected: state.tickets.ticketSelected
+  ticketSelected: state.tickets.ticketSelected,
+  filterApplied: state.tickets.filterApplied,
+  status: state.tickets.status,
 })
 
 const mapDispatch = {
@@ -123,7 +130,8 @@ const mapDispatch = {
   setTickets,
   filterTicketsBySpaceId,
   selectSpace,
-  selectTicket
+  selectTicket,
+  filterByStatus
 }
 
 const connector = connect(mapState, mapDispatch)

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux'
-import { selectTicket } from 'reducers/tickets'
+import { selectTicket, resolveTicket } from 'reducers/tickets'
 import { RootState } from 'App';
-import { Table, Empty, Tag, Tooltip } from 'antd';
+import { Table, Empty, Tag, Tooltip, Popconfirm } from 'antd';
 import moment from 'moment'
 import { StatusColor, TicketTagProps, CreatedAtProps } from 'shared/interfaces'
 import './TicketList.css';
@@ -36,7 +36,32 @@ const TicketList = (props: PropsFromRedux) => {
         return 'red'
     }
 
-    const TicketTag = (props: TicketTagProps) => <Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
+    const onConfirm = (ticket: any): any => {
+        props.resolveTicket(ticket)
+    }
+
+    const TicketTag = (props: TicketTagProps) => {
+        return (
+            <>
+                {
+                    props.status === 'Open' ? (
+                        <Tooltip title="Click to resolve ticket">
+                            <Popconfirm
+                                title="Are you sure resolve this ticket?"
+                                onConfirm={() => onConfirm(props.ticket)}
+                                placement="left"
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Tag className="clickable" color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
+                            </Popconfirm>
+                        </Tooltip>
+                    ) : (<Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
+                        )
+                }
+            </>
+        )
+    }
     const CreatedAt = (props: CreatedAtProps) => <Tooltip title={moment(props.date).format('MM/DD/YYYY LT')}>{moment(props.date).fromNow()}</Tooltip>
 
     const columns = [
@@ -60,7 +85,7 @@ const TicketList = (props: PropsFromRedux) => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string, record: any) => <TicketTag status={status} createdAt={record.createdAt} />
+            render: (status: string, record: any) => <TicketTag status={status} createdAt={record.createdAt} ticket={record} />
         },
     ];
 
@@ -73,9 +98,9 @@ const TicketList = (props: PropsFromRedux) => {
             locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
             onRow={(record, rowIndex) => {
                 return {
-                  onClick: event => props.selectTicket(record),
+                    onClick: event => props.selectTicket(record),
                 };
-              }}
+            }}
         />
     )
 
@@ -83,11 +108,12 @@ const TicketList = (props: PropsFromRedux) => {
 
 const mapState = (state: RootState) => ({
 
-  })
-  
-  const mapDispatch = {
-    selectTicket
-  }
-  
-  const connector = connect(mapState, mapDispatch)
-  export default connector(TicketList);
+})
+
+const mapDispatch = {
+    selectTicket,
+    resolveTicket
+}
+
+const connector = connect(mapState, mapDispatch)
+export default connector(TicketList);

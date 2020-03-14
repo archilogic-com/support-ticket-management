@@ -79,13 +79,14 @@ const FloorPlan = (props: PropsFromRedux) => {
     }, [props.selectedSpace])
 
     useEffect(() => {
-        if (!props.spaces || !props.tickets) {
+        if (!props.spaces && !props.tickets) {
             return
         }
 
         higlightSpaces()
 
     }, [props.spaces, props.tickets])
+
 
     const higlightSpaces = () => {
         props.spaces.forEach((space: any) => {
