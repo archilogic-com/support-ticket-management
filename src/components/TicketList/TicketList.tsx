@@ -23,7 +23,6 @@ const TicketList = (props: TicketListProps) => {
         }
 
         const ticketDate = moment(createdAt)
-
         const ticketDuration = moment.duration(moment().diff(ticketDate))
 
         if(ticketDuration.asDays() < 2){

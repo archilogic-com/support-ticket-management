@@ -6,7 +6,7 @@ declare var FloorPlanEngine: any
 const floorPlanStartupSettings = {
     hideElements: [],
     panZoom: true,
-    planRotation: 180,
+    planRotation: null,
     roomStampSize: null,
     ui: {
         menu: false,
@@ -41,7 +41,8 @@ interface FloorPlanProps {
     spaceSelected: any
     onSpaceSelected: any,
     sceneId: string,
-    tickets: any[]
+    tickets: any[],
+    onSpacesLoaded: any
 }
 
 const FloorPlan = (props: FloorPlanProps) => {
@@ -55,9 +56,10 @@ const FloorPlan = (props: FloorPlanProps) => {
         fp.loadScene(props.sceneId).then(() => {
             setSpaces(fp.state.computed.spaces)
         })
-    }, []);
+    }, [props.sceneId]);
 
     useEffect(() => {
+        props.onSpacesLoaded(spaces)
         spaces.forEach((space: any) => {
             document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
                 const spaceId = getIdFromEvent(e)
@@ -86,7 +88,6 @@ const FloorPlan = (props: FloorPlanProps) => {
     const higlightSpaces = () => {
         spaces.forEach((space: any) => {
             const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status == 'Open'))
-            console.log(space)
             if (props.spaceSelected !== undefined && space.id === props.spaceSelected.id) {
                 fillSpaceWithColor(space, colorMap['lightBlue'])
                 return
