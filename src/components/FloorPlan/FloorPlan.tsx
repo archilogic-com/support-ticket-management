@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux'
-import { setSpaces } from 'reducers/spaces'
+import { setSpaces, selectSpace } from 'reducers/spaces'
 import { RootState } from 'App';
 
 import './FloorPlan.css';
@@ -42,8 +42,6 @@ const colorMap = {
 };
 
 interface FloorPlanProps {
-    spaceSelected: any
-    onSpaceSelected: any,
     sceneId: string,
     tickets: any[],
     onSpacesLoaded: any
@@ -73,17 +71,17 @@ const FloorPlan = (props: PropsFromRedux) => {
             document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
                 const spaceId = getIdFromEvent(e)
                 const space = findSpaceById(spaceId)
-                props.onSpaceSelected(space)
+                props.selectSpace(space)
             })
         });
     }, [props.spaces])
 
     useEffect(() => {
-        if (props.spaceSelected === undefined) {
+        if (props.selectedSpace === null) {
             return
         }
         higlightSpaces()
-    }, [props.spaceSelected])
+    }, [props.selectedSpace])
 
     useEffect(() => {
         if (!props.spaces || !props.tickets) {
@@ -97,7 +95,7 @@ const FloorPlan = (props: PropsFromRedux) => {
     const higlightSpaces = () => {
         props.spaces.forEach((space: any) => {
             const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status == 'Open'))
-            if (props.spaceSelected !== undefined && space.id === props.spaceSelected.id) {
+            if (props.selectedSpace !== null && space.id === props.selectedSpace.id) {
                 fillSpaceWithColor(space, colorMap['lightBlue'])
                 return
             }
@@ -142,7 +140,8 @@ const mapState = (state: RootState) => ({
   })
   
   const mapDispatch = {
-   setSpaces
+   setSpaces,
+   selectSpace
   }
   
   const connector = connect(mapState, mapDispatch)

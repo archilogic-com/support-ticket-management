@@ -54,8 +54,4 @@ export const filterTicketsBySpaceId = (spaceId: string) => {
 }
 
 
-
-
-
-
 export default tickets

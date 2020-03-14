@@ -6,7 +6,7 @@ import { Row, Col, Layout, Select, Button, Divider } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
 import { assignSpacesToTickets } from 'data/ticketsData'
 import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId } from 'reducers/tickets';
-import { SpacesState } from 'reducers/spaces';
+import { SpacesState, selectSpace } from 'reducers/spaces';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
@@ -28,23 +28,19 @@ const App = (props: Props) => {
 
 
   useEffect(() => {
-    if (!spaceSelected) {
+    if (!props.selectedSpace) {
       return
     }
-    props.filterTicketsBySpaceId(spaceSelected.id)
-  }, [spaceSelected])
-
-  const onSpaceSelected = (space: any) => {
-    setSpaceSelected(space)
-  }
+    props.filterTicketsBySpaceId(props.selectedSpace.id)
+  }, [props.selectedSpace])
 
   const onClearFilters = () => {
     props.setTickets(props.originalTickets)
-    setSpaceSelected(undefined)
+    props.selectSpace(null)
   }
 
   const disableClearFilters = (): boolean => {
-    return spaceSelected === undefined
+    return props.selectedSpace === null
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
@@ -63,8 +59,6 @@ const App = (props: Props) => {
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
-                onSpaceSelected={onSpaceSelected}
-                spaceSelected={spaceSelected}
                 tickets={props.tickets}
                 onSpacesLoaded={onSpacesLoaded}
               />
@@ -108,13 +102,15 @@ export interface RootState {
 
 const mapState = (state: RootState) => ({
   tickets: state.tickets.tickets,
-  originalTickets: state.tickets.originalTickets
+  originalTickets: state.tickets.originalTickets,
+  selectedSpace: state.spaces.selectedSpace
 })
 
 const mapDispatch = {
   initTickets,
   setTickets,
-  filterTicketsBySpaceId
+  filterTicketsBySpaceId,
+  selectSpace
 }
 
 const connector = connect(mapState, mapDispatch)

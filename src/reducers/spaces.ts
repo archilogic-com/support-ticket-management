@@ -2,7 +2,8 @@ import { combineReducers } from 'redux'
 import moment from 'moment'
 
 import {
- SET_SPACES
+    SET_SPACES,
+    SELECT_SAPCE
 } from './actions'
 
 export interface SpacesState {
@@ -23,6 +24,11 @@ const spaces = (state = initialState, action: { type: string, spaces: any[], spa
                 ...state,
                 spaces: action.spaces,
             }
+        case SELECT_SAPCE:
+            return {
+                ...state,
+                selectedSpace: action.space,
+            }
 
         default:
             return state
@@ -34,6 +40,10 @@ export const setSpaces = (spaces: any[]) => {
     return { type: SET_SPACES, spaces }
 }
 
+
+export const selectSpace = (space: any) => {
+    return { type: SELECT_SAPCE, space}
+}
 
 
 export default spaces
