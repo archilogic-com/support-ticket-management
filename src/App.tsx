@@ -4,24 +4,21 @@ import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
 import { Row, Col, Layout, Select, Button, Divider } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
-import moment from 'moment'
-import { tickets, assignSpacesToTickets } from 'data/ticketsData'
-import { TicketsState, initTickets, setTickets } from 'reducers/tickets';
+import { assignSpacesToTickets } from 'data/ticketsData'
+import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId } from 'reducers/tickets';
+import { SpacesState } from 'reducers/spaces';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-type Props = PropsFromRedux & {
-
-}
+type Props = PropsFromRedux
 
 const App = (props: Props) => {
   const [spaceSelected, setSpaceSelected] = useState<any>(undefined)
-  const [ticketsFiltered, setTicketsFiltered] = useState<any[]>([])
   const [sceneId, setSceneId] = useState<any>()
 
-  
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const scene = urlParams.get('scene');
@@ -34,8 +31,7 @@ const App = (props: Props) => {
     if (!spaceSelected) {
       return
     }
-    const spaceTickets = props.originalTickets.filter((space) => space.spaceId === spaceSelected.id)
-    props.setTickets(spaceTickets)
+    props.filterTicketsBySpaceId(spaceSelected.id)
   }, [spaceSelected])
 
   const onSpaceSelected = (space: any) => {
@@ -105,8 +101,9 @@ const App = (props: Props) => {
   );
 }
 
-interface RootState {
+export interface RootState {
   tickets: TicketsState
+  spaces: SpacesState
 }
 
 const mapState = (state: RootState) => ({
@@ -116,7 +113,8 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = {
   initTickets,
-  setTickets
+  setTickets,
+  filterTicketsBySpaceId
 }
 
 const connector = connect(mapState, mapDispatch)

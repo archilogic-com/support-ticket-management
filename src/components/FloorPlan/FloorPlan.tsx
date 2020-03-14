@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux'
+import { setSpaces } from 'reducers/spaces'
+import { RootState } from 'App';
+
 import './FloorPlan.css';
 
 declare var FloorPlanEngine: any
@@ -45,29 +49,34 @@ interface FloorPlanProps {
     onSpacesLoaded: any
 }
 
-const FloorPlan = (props: FloorPlanProps) => {
+type PropsFromRedux = FloorPlanProps & ConnectedProps<typeof connector>
 
-    const [spaces, setSpaces] = useState<any[]>([])
+const FloorPlan = (props: PropsFromRedux) => {
+
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         const container = document.getElementById('floorplan')
-
+        setLoading(true)
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
         fp.loadScene(props.sceneId).then(() => {
+            props.setSpaces(fp.state.computed.spaces)
             setSpaces(fp.state.computed.spaces)
+            setLoading(false)
         })
     }, [props.sceneId]);
 
     useEffect(() => {
-        props.onSpacesLoaded(spaces)
-        spaces.forEach((space: any) => {
+        props.onSpacesLoaded(props.spaces)
+
+        props.spaces.forEach((space: any) => {
             document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
                 const spaceId = getIdFromEvent(e)
                 const space = findSpaceById(spaceId)
                 props.onSpaceSelected(space)
             })
         });
-    }, [spaces])
+    }, [props.spaces])
 
     useEffect(() => {
         if (props.spaceSelected === undefined) {
@@ -77,16 +86,16 @@ const FloorPlan = (props: FloorPlanProps) => {
     }, [props.spaceSelected])
 
     useEffect(() => {
-        if (!spaces || !props.tickets) {
+        if (!props.spaces || !props.tickets) {
             return
         }
 
         higlightSpaces()
 
-    }, [spaces, props.tickets])
+    }, [props.spaces, props.tickets])
 
     const higlightSpaces = () => {
-        spaces.forEach((space: any) => {
+        props.spaces.forEach((space: any) => {
             const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status == 'Open'))
             if (props.spaceSelected !== undefined && space.id === props.spaceSelected.id) {
                 fillSpaceWithColor(space, colorMap['lightBlue'])
@@ -103,9 +112,8 @@ const FloorPlan = (props: FloorPlanProps) => {
         })
     }
 
-
     const findSpaceById = (id: string) => {
-        return spaces.find(space => {
+        return props.spaces.find(space => {
             return space.id === id
         })
     }
@@ -124,10 +132,18 @@ const FloorPlan = (props: FloorPlanProps) => {
         return e.currentTarget.id.replace('el-', '')
     }
 
-    return (
-        <div id="floorplan" style={{ height: '100%', width: '100%' }}></div>
-    )
+    return (<div id="floorplan" style={{ height: '100%', width: '100%' }}></div>)
 
 }
 
-export default FloorPlan;
+const mapState = (state: RootState) => ({
+    spaces: state.spaces.spaces,
+    selectedSpace: state.spaces.selectedSpace
+  })
+  
+  const mapDispatch = {
+   setSpaces
+  }
+  
+  const connector = connect(mapState, mapDispatch)
+  export default connector(FloorPlan);

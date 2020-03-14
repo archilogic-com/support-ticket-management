@@ -9,23 +9,22 @@ interface TicketListProps {
 }
 
 const TicketList = (props: TicketListProps) => {
-        
+
     const statusColor: StatusColor = {
         "Open": 'red',
         "Resolved": 'green'
     }
 
     const resolveTicketColor = (status: string, createdAt: string): string => {
-//statusColor[props.status]
 
-        if(status === 'Resolved'){
+        if (status === 'Resolved') {
             return 'green'
         }
 
         const ticketDate = moment(createdAt)
         const ticketDuration = moment.duration(moment().diff(ticketDate))
 
-        if(ticketDuration.asDays() < 2){
+        if (ticketDuration.asDays() < 2) {
             return 'gold'
         }
 
