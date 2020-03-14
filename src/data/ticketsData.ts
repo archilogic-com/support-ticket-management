@@ -120,7 +120,6 @@ export const tickets = [
 ];
 
 export const assignSpacesToTickets = (spaces: any[]) => {
-    console.log('randomTicket', spaces)
     spaces.forEach((space: any) => {
         const dice = Math.floor(Math.random() * 10)
         if (dice > 0 && space.usage == 'Work' || space.usage == 'Work' || space.usage == 'Kitchen' || space.usage == 'Common' || space.usage == 'Bathroom') {

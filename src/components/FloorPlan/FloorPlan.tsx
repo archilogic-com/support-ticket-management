@@ -38,7 +38,7 @@ const colorMap = {
     red: [227, 108, 100],
     green: [177, 204, 136],
     blue: [0, 100, 255],
-    lightBlue: [207, 238, 253]
+    gold: [250, 173, 20]
 };
 
 interface FloorPlanProps {
@@ -59,14 +59,12 @@ const FloorPlan = (props: PropsFromRedux) => {
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
         fp.loadScene(props.sceneId).then(() => {
             props.setSpaces(fp.state.computed.spaces)
-            setSpaces(fp.state.computed.spaces)
+            props.onSpacesLoaded(fp.state.computed.spaces)
             setLoading(false)
         })
     }, [props.sceneId]);
 
     useEffect(() => {
-        props.onSpacesLoaded(props.spaces)
-
         props.spaces.forEach((space: any) => {
             document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
                 const spaceId = getIdFromEvent(e)
@@ -77,9 +75,6 @@ const FloorPlan = (props: PropsFromRedux) => {
     }, [props.spaces])
 
     useEffect(() => {
-        if (props.selectedSpace === null) {
-            return
-        }
         higlightSpaces()
     }, [props.selectedSpace])
 
@@ -96,7 +91,7 @@ const FloorPlan = (props: PropsFromRedux) => {
         props.spaces.forEach((space: any) => {
             const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status == 'Open'))
             if (props.selectedSpace !== null && space.id === props.selectedSpace.id) {
-                fillSpaceWithColor(space, colorMap['lightBlue'])
+                fillSpaceWithColor(space, colorMap['gold'])
                 return
             }
 

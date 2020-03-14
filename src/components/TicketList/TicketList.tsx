@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux'
+import { selectTicket } from 'reducers/tickets'
+import { RootState } from 'App';
 import { Table, Empty, Tag, Tooltip } from 'antd';
 import moment from 'moment'
 import { StatusColor, TicketTagProps, CreatedAtProps } from 'shared/interfaces'
@@ -8,7 +11,9 @@ interface TicketListProps {
     tickets: any[]
 }
 
-const TicketList = (props: TicketListProps) => {
+type PropsFromRedux = TicketListProps & ConnectedProps<typeof connector>
+
+const TicketList = (props: PropsFromRedux) => {
 
     const statusColor: StatusColor = {
         "Open": 'red',
@@ -66,9 +71,23 @@ const TicketList = (props: TicketListProps) => {
             columns={columns}
             pagination={false}
             locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
+            onRow={(record, rowIndex) => {
+                return {
+                  onClick: event => props.selectTicket(record),
+                };
+              }}
         />
     )
 
 }
 
-export default TicketList;
+const mapState = (state: RootState) => ({
+
+  })
+  
+  const mapDispatch = {
+    selectTicket
+  }
+  
+  const connector = connect(mapState, mapDispatch)
+  export default connector(TicketList);

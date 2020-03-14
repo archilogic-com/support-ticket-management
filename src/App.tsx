@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
-import { Row, Col, Layout, Select, Button, Divider } from 'antd';
+import { Row, Col, Layout, Select, Button, Divider, Drawer } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
 import { assignSpacesToTickets } from 'data/ticketsData'
-import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId } from 'reducers/tickets';
+import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId, selectTicket } from 'reducers/tickets';
 import { SpacesState, selectSpace } from 'reducers/spaces';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
@@ -15,7 +15,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux
 
 const App = (props: Props) => {
-  const [spaceSelected, setSpaceSelected] = useState<any>(undefined)
   const [sceneId, setSceneId] = useState<any>()
 
 
@@ -28,7 +27,7 @@ const App = (props: Props) => {
 
 
   useEffect(() => {
-    if (!props.selectedSpace) {
+    if (props.selectedSpace === null) {
       return
     }
     props.filterTicketsBySpaceId(props.selectedSpace.id)
@@ -44,9 +43,11 @@ const App = (props: Props) => {
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
+    console.log('spaces', spaces)
     const tickets = assignSpacesToTickets(spaces)
     props.initTickets(tickets)
   }
+  
 
   return (
     <Layout>
@@ -59,7 +60,7 @@ const App = (props: Props) => {
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
-                tickets={props.tickets}
+                tickets={props.originalTickets}
                 onSpacesLoaded={onSpacesLoaded}
               />
             }
@@ -85,6 +86,16 @@ const App = (props: Props) => {
               </Col>
               <Col span={24}>
                 <TicketList tickets={props.tickets} />
+                <Drawer
+                  title="Basic Drawer"
+                  placement="right"
+                  visible={/*props.ticketSelected !== null*/false}
+                  onClose={ () => props.selectTicket(null)}
+                >
+                  <p>Some contents...</p>
+                  <p>Some contents...</p>
+                  <p>Some contents...</p>
+                </Drawer>
               </Col>
             </Row>
           </Col>
@@ -103,14 +114,16 @@ export interface RootState {
 const mapState = (state: RootState) => ({
   tickets: state.tickets.tickets,
   originalTickets: state.tickets.originalTickets,
-  selectedSpace: state.spaces.selectedSpace
+  selectedSpace: state.spaces.selectedSpace,
+  ticketSelected: state.tickets.ticketSelected
 })
 
 const mapDispatch = {
   initTickets,
   setTickets,
   filterTicketsBySpaceId,
-  selectSpace
+  selectSpace,
+  selectTicket
 }
 
 const connector = connect(mapState, mapDispatch)
