@@ -1,39 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux'
 import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
 import { Row, Col, Layout, Select, Button, Divider } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
 import moment from 'moment'
 import { tickets, assignSpacesToTickets } from 'data/ticketsData'
+import { TicketsState, initTickets, setTickets } from 'reducers/tickets';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
+type PropsFromRedux = ConnectedProps<typeof connector>
 
-function App() {
+type Props = PropsFromRedux & {
+
+}
+
+const App = (props: Props) => {
   const [spaceSelected, setSpaceSelected] = useState<any>(undefined)
   const [ticketsFiltered, setTicketsFiltered] = useState<any[]>([])
-  const [tickets, setTickets] = useState<any[]>([])
   const [sceneId, setSceneId] = useState<any>()
+
+  
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const scene = urlParams.get('scene');
-    const demoSceneId = scene || '415a1828-3aab-4559-a060-55713a1360c8'; //a9aaafdf-d5b6-4b4a-82a0-9efb6d5b155a
-
-    console.log(demoSceneId)
+    const demoSceneId = scene || '415a1828-3aab-4559-a060-55713a1360c8';
     setSceneId(demoSceneId)
   }, [])
 
-  useEffect(() => {
-    tickets.sort((a, b) => (a.status > b.status) ? 1 : (a.status === b.status) ? ((moment(b.createdAt).isBefore(moment(a.createdAt))) ? 1 : -1) : -1)
-    setTicketsFiltered(tickets)
-  }, [tickets])
 
   useEffect(() => {
     if (!spaceSelected) {
       return
     }
-    const spaceTickets = tickets.filter((space) => space.spaceId === spaceSelected.id)
-    setTicketsFiltered(spaceTickets)
+    const spaceTickets = props.originalTickets.filter((space) => space.spaceId === spaceSelected.id)
+    props.setTickets(spaceTickets)
   }, [spaceSelected])
 
   const onSpaceSelected = (space: any) => {
@@ -41,7 +43,7 @@ function App() {
   }
 
   const onClearFilters = () => {
-    setTicketsFiltered(tickets)
+    props.setTickets(props.originalTickets)
     setSpaceSelected(undefined)
   }
 
@@ -51,7 +53,7 @@ function App() {
 
   const onSpacesLoaded = (spaces: any[]) => {
     const tickets = assignSpacesToTickets(spaces)
-    setTickets(tickets)
+    props.initTickets(tickets)
   }
 
   return (
@@ -61,19 +63,17 @@ function App() {
       </Header>
       <Content className="content">
         <Row style={{ height: '100%' }} gutter={[0, 0]}>
-
           <Col span={16} style={{ height: '100%' }} >
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
                 onSpaceSelected={onSpaceSelected}
                 spaceSelected={spaceSelected}
-                tickets={ticketsFiltered}
+                tickets={props.tickets}
                 onSpacesLoaded={onSpacesLoaded}
               />
             }
           </Col>
-
           <Col span={8} className="side">
             <Row>
               <Col span={24} className="filters-container">
@@ -94,7 +94,7 @@ function App() {
                 <Button size="small" danger onClick={onClearFilters} disabled={disableClearFilters()}>Clear Filters</Button>
               </Col>
               <Col span={24}>
-                <TicketList tickets={ticketsFiltered} />
+                <TicketList tickets={props.tickets} />
               </Col>
             </Row>
           </Col>
@@ -102,8 +102,22 @@ function App() {
       </Content>
       <Footer></Footer>
     </Layout>
-
   );
 }
 
-export default App;
+interface RootState {
+  tickets: TicketsState
+}
+
+const mapState = (state: RootState) => ({
+  tickets: state.tickets.tickets,
+  originalTickets: state.tickets.originalTickets
+})
+
+const mapDispatch = {
+  initTickets,
+  setTickets
+}
+
+const connector = connect(mapState, mapDispatch)
+export default connector(App);
