@@ -5,9 +5,19 @@ export interface StatusColor {
 export interface TicketTagProps {
     status: string
     createdAt: string,
-    ticket: any
+    ticket: Ticket
 }
 
 export interface CreatedAtProps {
     date: string
+}
+
+export interface Ticket {
+    key: string,
+    submitedBy: string,
+    description: string,
+    createdAt: string,
+    status: string,
+    tags: string,
+    spaceId: string | undefined
 }

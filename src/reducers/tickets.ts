@@ -3,11 +3,12 @@ import moment from 'moment'
 import {
     INIT_TICKETS, SET_TICKETS, FILTER_BY_SPACE_ID, SELECT_TICKET, FILTER_TICKETS_BY_STATUS, RESOLVE_TICKET
 } from './actions'
+import { Ticket } from 'shared/interfaces'
 
 export interface TicketsState {
-    originalTickets: any[]
-    tickets: any[]
-    ticketSelected?: any
+    originalTickets: Ticket[]
+    tickets: Ticket[]
+    ticketSelected: Ticket | null
     filterApplied: boolean
     status: string
 }
@@ -20,9 +21,9 @@ const initialState: TicketsState = {
     status: 'all'
 }
 
-const sortCriteria = (a: any, b: any) => (a.status > b.status) ? 1 : (a.status === b.status) ? ((moment(b.createdAt).isBefore(moment(a.createdAt))) ? 1 : -1) : -1
+const sortCriteria = (a: Ticket, b: Ticket) => (a.status > b.status) ? 1 : (a.status === b.status) ? ((moment(b.createdAt).isBefore(moment(a.createdAt))) ? 1 : -1) : -1
 
-const tickets = (state = initialState, action: { type: string, tickets: any[], spaceId: string, ticket?: any, status: string }) => {
+const tickets = (state = initialState, action: { type: string, tickets: Ticket[], spaceId: string, ticket: Ticket, status: string }) => {
     switch (action.type) {
         case INIT_TICKETS:
             const tickets = action.tickets.sort(sortCriteria)
@@ -68,8 +69,8 @@ const tickets = (state = initialState, action: { type: string, tickets: any[], s
     }
 }
 
-const markTicketAsResolved = (tickets: any[], key: string) => {
-    return tickets.map((ticket: any) => {
+const markTicketAsResolved = (tickets: Ticket[], key: string) => {
+    return tickets.map((ticket: Ticket) => {
         if (ticket.key === key) {
             ticket.status = 'Resolved'
         }
@@ -78,15 +79,15 @@ const markTicketAsResolved = (tickets: any[], key: string) => {
 }
 
 
-export const initTickets = (tickets: any[]) => {
+export const initTickets = (tickets: Ticket[]) => {
     return { type: INIT_TICKETS, tickets }
 }
 
-export const setTickets = (tickets: any[]) => {
+export const setTickets = (tickets: Ticket[]) => {
     return { type: SET_TICKETS, tickets }
 }
 
-export const selectTicket = (ticket?: any) => {
+export const selectTicket = (ticket: Ticket | null) => {
     return { type: SELECT_TICKET, ticket }
 }
 
@@ -99,7 +100,7 @@ export const filterByStatus = (status: string) => {
 
 }
 
-export const resolveTicket = (ticket: any) => {
+export const resolveTicket = (ticket: Ticket) => {
     return { type: RESOLVE_TICKET, ticket}
 }
 

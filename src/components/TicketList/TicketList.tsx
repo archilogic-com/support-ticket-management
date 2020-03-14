@@ -4,11 +4,11 @@ import { selectTicket, resolveTicket } from 'reducers/tickets'
 import { RootState } from 'App';
 import { Table, Empty, Tag, Tooltip, Popconfirm } from 'antd';
 import moment from 'moment'
-import { TicketTagProps, CreatedAtProps } from 'shared/interfaces'
+import { TicketTagProps, CreatedAtProps, Ticket } from 'shared/interfaces'
 import './TicketList.css';
 
 interface TicketListProps {
-    tickets: any[]
+    tickets: Ticket[]
 }
 
 type PropsFromRedux = TicketListProps & ConnectedProps<typeof connector>
@@ -31,7 +31,7 @@ const TicketList = (props: PropsFromRedux) => {
         return 'red'
     }
 
-    const onConfirm = (ticket: any): any => {
+    const onConfirm = (ticket: Ticket): any => {
         props.resolveTicket(ticket)
     }
 
@@ -80,7 +80,7 @@ const TicketList = (props: PropsFromRedux) => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string, record: any) => <TicketTag status={status} createdAt={record.createdAt} ticket={record} />
+            render: (status: string, record: Ticket) => <TicketTag status={status} createdAt={record.createdAt} ticket={record} />
         },
     ];
 

@@ -1,4 +1,6 @@
-export const tickets = [
+import { Ticket } from "shared/interfaces";
+
+export const tickets: Ticket[] = [
     {
         key: '1',
         submitedBy: 'Patrick Alec',
