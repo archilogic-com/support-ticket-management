@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import { selectTicket, resolveTicket } from 'reducers/tickets'
 import { RootState } from 'App';
 import { Table, Empty, Tag, Tooltip, Popconfirm } from 'antd';
 import moment from 'moment'
-import { StatusColor, TicketTagProps, CreatedAtProps } from 'shared/interfaces'
+import { TicketTagProps, CreatedAtProps } from 'shared/interfaces'
 import './TicketList.css';
 
 interface TicketListProps {
@@ -14,11 +14,6 @@ interface TicketListProps {
 type PropsFromRedux = TicketListProps & ConnectedProps<typeof connector>
 
 const TicketList = (props: PropsFromRedux) => {
-
-    const statusColor: StatusColor = {
-        "Open": 'red',
-        "Resolved": 'green'
-    }
 
     const resolveTicketColor = (status: string, createdAt: string): string => {
 

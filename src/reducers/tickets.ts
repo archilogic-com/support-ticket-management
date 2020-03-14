@@ -3,7 +3,6 @@ import moment from 'moment'
 import {
     INIT_TICKETS, SET_TICKETS, FILTER_BY_SPACE_ID, SELECT_TICKET, FILTER_TICKETS_BY_STATUS, RESOLVE_TICKET
 } from './actions'
-import { stat } from 'fs'
 
 export interface TicketsState {
     originalTickets: any[]

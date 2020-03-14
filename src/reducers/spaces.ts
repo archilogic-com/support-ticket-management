@@ -1,6 +1,3 @@
-import { combineReducers } from 'redux'
-import moment from 'moment'
-
 import {
     SET_SPACES,
     SELECT_SAPCE

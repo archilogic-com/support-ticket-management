@@ -106,29 +106,19 @@ export const tickets = [
         status: 'Open',
         tags: 'Heat/Air',
         spaceId: undefined
-    },
-    // {
-    //     key: '13',
-    //     submitedBy: 'Amy',
-    //     description: 'Power outlet not working',
-    //     createdAt: '2020-03-12 10:06',
-    //     status: 'Open',
-    //     tags: 'Heat/Air',
-    //     spaceId: undefined
-    // },
-
+    }
 ];
 
 export const assignSpacesToTickets = (spaces: any[]) => {
     spaces.forEach((space: any) => {
         const dice = Math.floor(Math.random() * 10)
-        if (dice > 0 && space.usage == 'Work' || space.usage == 'Work' || space.usage == 'Kitchen' || space.usage == 'Common' || space.usage == 'Bathroom') {
+        if (dice > 0 && (space.usage === 'Work' || space.usage === 'Work' || space.usage === 'Kitchen' || space.usage === 'Common' || space.usage === 'Bathroom')) {
             const ticketsToBeAssigned = tickets.filter(ticket => ticket.spaceId === undefined)
             const randomTicket = ticketsToBeAssigned[Math.floor(Math.random() * ticketsToBeAssigned.length)];
 
             if (randomTicket) {
                 randomTicket['spaceId'] = space.node.id
-                if (Math.floor(Math.random() * 10) == 0) {
+                if (Math.floor(Math.random() * 10) === 0) {
                     const ticketsToBeAssigned = tickets.filter(ticket => ticket.spaceId === undefined)
                     const randomTicket = ticketsToBeAssigned[Math.floor(Math.random() * ticketsToBeAssigned.length)];
                     if (randomTicket) {

@@ -90,7 +90,7 @@ const FloorPlan = (props: PropsFromRedux) => {
 
     const higlightSpaces = () => {
         props.spaces.forEach((space: any) => {
-            const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status == 'Open'))
+            const spaceTickets = props.tickets.filter((ticket) => (ticket.spaceId === space.id && ticket.status === 'Open'))
             if (props.selectedSpace !== null && space.id === props.selectedSpace.id) {
                 fillSpaceWithColor(space, colorMap['gold'])
                 return
