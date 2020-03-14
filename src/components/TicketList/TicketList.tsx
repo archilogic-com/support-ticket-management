@@ -91,6 +91,7 @@ const TicketList = (props: PropsFromRedux) => {
             columns={columns}
             pagination={false}
             locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
+            tableLayout="auto"
             onRow={(record, rowIndex) => {
                 return {
                     onClick: event => props.selectTicket(record),

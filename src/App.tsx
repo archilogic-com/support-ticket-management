@@ -60,8 +60,8 @@ const App = (props: Props) => {
         <div className="logo">Ticket Management</div>
       </Header>
       <Content className="content">
-        <Row style={{ height: '100%' }} gutter={[0, 0]}>
-          <Col span={16} style={{ height: '100%' }} >
+        <Row className="floorplan-row"  gutter={[0, 0]}>
+          <Col xs={24} lg={16} style={{ height: '100%' }} >
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
@@ -70,9 +70,9 @@ const App = (props: Props) => {
               />
             }
           </Col>
-          <Col span={8} className="side">
+          <Col xs={24} lg={8} className="side">
             <Row>
-              <Col span={24} className="filters-container">
+              <Col xs={24} lg={24} className="filters-container">
                 <Select style={{ width: 120 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
                   <Option value="all">All</Option>
                   <Option value="Open">Open</Option>
@@ -87,9 +87,9 @@ const App = (props: Props) => {
                   <Option value="72-more">> 72 hours</Option>
                 </Select>
                 <Divider type="vertical" />
-                <Button size="small" danger onClick={onClearFilters} disabled={!props.filterApplied}>Clear Filters</Button>
+                <Button size="small" danger onClick={onClearFilters} disabled={!props.filterApplied}>Clear</Button>
               </Col>
-              <Col span={24}>
+              <Col lg={24}>
                 <TicketList tickets={props.tickets} />
                 <Drawer
                   title="Basic Drawer"
