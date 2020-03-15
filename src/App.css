@@ -31,6 +31,10 @@ body, #root, .App, .ant-layout {
   height: 100%;
 }
 
+.ticket-modal span{
+  font-weight: bolder;
+}
+
 @media (min-width:320px)  {
   .floorplan-row{
     height: 400px;

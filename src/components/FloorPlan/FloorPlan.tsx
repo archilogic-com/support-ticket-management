@@ -58,6 +58,7 @@ const FloorPlan = (props: PropsFromRedux) => {
         setLoading(true)
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
         fp.loadScene(props.sceneId).then(() => {
+            console.log(fp)
             props.setSpaces(fp.state.computed.spaces)
             props.onSpacesLoaded(fp.state.computed.spaces)
             setLoading(false)
@@ -66,6 +67,7 @@ const FloorPlan = (props: PropsFromRedux) => {
 
     useEffect(() => {
         props.spaces.forEach((space: any) => {
+            console.log(space.id)
             document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
                 const spaceId = getIdFromEvent(e)
                 const space = findSpaceById(spaceId)

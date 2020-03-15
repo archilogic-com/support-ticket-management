@@ -104,7 +104,7 @@ export const filterByStatus = (status: string) => {
 
 }
 
-export const resolveTicket = (ticket: Ticket) => {
+export const resolveTicket = (ticket: Ticket | null) => {
     return { type: RESOLVE_TICKET, ticket}
 }
 

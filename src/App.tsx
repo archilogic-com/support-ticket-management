@@ -2,10 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
-import { Row, Col, Layout, Select, Button, Divider, Drawer } from 'antd';
-import TicketList from 'components/TicketList/TicketList';
-import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId, selectTicket, filterByStatus } from 'reducers/tickets';
+import { Row, Col, Layout, Select, Button, Divider, Drawer, Modal, Tag } from 'antd';
+import TicketList, { resolveTicketColor } from 'components/TicketList/TicketList';
+import {
+  TicketsState,
+  initTickets,
+  setTickets,
+  filterTicketsBySpaceId,
+  selectTicket,
+  filterByStatus,
+  resolveTicket
+} from 'reducers/tickets';
 import { SpacesState, selectSpace } from 'reducers/spaces';
+import moment from 'moment';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
@@ -56,7 +65,7 @@ const App = (props: Props) => {
         <div className="logo">Ticket Management</div>
       </Header>
       <Content className="content">
-        <Row className="floorplan-row"  gutter={[0, 0]}>
+        <Row className="floorplan-row" gutter={[0, 0]}>
           <Col xs={24} sm={24} lg={16} style={{ height: '100%' }} >
             {sceneId &&
               <FloorPlan
@@ -69,7 +78,7 @@ const App = (props: Props) => {
           <Col xs={24} sm={24} lg={8} className="side">
             <Row>
               <Col xs={24} lg={24} className="filters-container">
-                <Select style={{ width: 120 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
+                <Select style={{ width: 100 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
                   <Option value="all">All</Option>
                   <Option value="Open">Open</Option>
                   <Option value="Resolved">Resolved</Option>
@@ -87,16 +96,28 @@ const App = (props: Props) => {
               </Col>
               <Col lg={24}>
                 <TicketList tickets={props.tickets} />
-                <Drawer
-                  title="Basic Drawer"
-                  placement="right"
-                  visible={/*props.ticketSelected !== null*/false}
-                  onClose={() => props.selectTicket(null)}
-                >
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                </Drawer>
+                {props.ticketSelected &&
+                  <Modal
+                    title={props.ticketSelected?.title}
+                    visible={props.ticketSelected !== null}
+                    onCancel={() => props.selectTicket(null)}
+                    className="ticket-modal"
+                    footer={[
+                      <Button key="back" onClick={() => props.selectTicket(null)}>
+                        Cancel
+                      </Button>,
+                      <Button key="submit" type="primary" onClick={() =>props.resolveTicket(props.ticketSelected) }>
+                        Resolve
+                      </Button>,
+                    ]}
+                  >
+                    <p><span>Submited by: </span>{props.ticketSelected?.submitedBy}</p>
+                    <p><span>Description: </span>{props.ticketSelected?.description}</p>
+                    <p><span>Submited: </span>{moment(props.ticketSelected?.createdAt).format('MM/DD/YYYY')} ({moment(props.ticketSelected?.createdAt).fromNow()})</p>
+                    <p><span>Status: </span>{<Tag color={resolveTicketColor(props.ticketSelected?.status, props.ticketSelected?.createdAt)}>{props.ticketSelected?.status}</Tag>}</p>
+                    <p>{props.ticketSelected?.tags.split(',').map((tag: string) => <Tag color="blue">{tag}</Tag>)}</p>
+                  </Modal>
+                }
               </Col>
             </Row>
           </Col>
@@ -127,7 +148,8 @@ const mapDispatch = {
   filterTicketsBySpaceId,
   selectSpace,
   selectTicket,
-  filterByStatus
+  filterByStatus,
+  resolveTicket
 }
 
 const connector = connect(mapState, mapDispatch)

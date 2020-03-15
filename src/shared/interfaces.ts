@@ -15,6 +15,7 @@ export interface CreatedAtProps {
 export interface Ticket {
     key: string,
     submitedBy: string,
+    title: string,
     description: string,
     createdAt: string,
     status: string,

@@ -2,34 +2,38 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import { selectTicket, resolveTicket } from 'reducers/tickets'
 import { RootState } from 'App';
-import { Table, Empty, Tag, Tooltip, Popconfirm } from 'antd';
+import { Table, Empty, Tag, Tooltip, Popconfirm, Button } from 'antd';
 import moment from 'moment'
 import { TicketTagProps, CreatedAtProps, Ticket } from 'shared/interfaces'
+import {
+    EyeOutlined
+} from '@ant-design/icons';
 import './TicketList.css';
 
 interface TicketListProps {
     tickets: Ticket[]
 }
 
+export const resolveTicketColor = (status?: string, createdAt?: string): string => {
+
+    if (status === 'Resolved') {
+        return 'green'
+    }
+
+    const ticketDate = moment(createdAt)
+    const ticketDuration = moment.duration(moment().diff(ticketDate))
+
+    if (ticketDuration.asDays() < 2) {
+        return 'gold'
+    }
+
+    return 'red'
+}
+
 type PropsFromRedux = TicketListProps & ConnectedProps<typeof connector>
 
 const TicketList = (props: PropsFromRedux) => {
 
-    const resolveTicketColor = (status: string, createdAt: string): string => {
-
-        if (status === 'Resolved') {
-            return 'green'
-        }
-
-        const ticketDate = moment(createdAt)
-        const ticketDuration = moment.duration(moment().diff(ticketDate))
-
-        if (ticketDuration.asDays() < 2) {
-            return 'gold'
-        }
-
-        return 'red'
-    }
 
     const onConfirm = (ticket: Ticket): any => {
         props.resolveTicket(ticket)
@@ -40,17 +44,15 @@ const TicketList = (props: PropsFromRedux) => {
             <>
                 {
                     props.status === 'Open' ? (
-                        <Tooltip title="Click to resolve ticket">
-                            <Popconfirm
-                                title="Are you sure resolve this ticket?"
-                                onConfirm={() => onConfirm(props.ticket)}
-                                placement="left"
-                                okText="Yes"
-                                cancelText="No"
-                            >
-                                <Tag className="clickable" color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
-                            </Popconfirm>
-                        </Tooltip>
+                        <Popconfirm
+                            title="Are you sure resolve this ticket?"
+                            onConfirm={() => onConfirm(props.ticket)}
+                            placement="left"
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Tag className="clickable" color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
+                        </Popconfirm>
                     ) : (<Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
                         )
                 }
@@ -61,47 +63,52 @@ const TicketList = (props: PropsFromRedux) => {
 
     const columns = [
         {
-            title: 'Submited By',
-            dataIndex: 'submitedBy',
-            key: 'submitedBy',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
         },
         {
             title: 'Submited',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            ellipsis: true,
             render: (date: string) => <CreatedAt date={date} />
+
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            ellipsis: true,
             render: (status: string, record: Ticket) => <TicketTag status={status} createdAt={record.createdAt} ticket={record} />
         },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text: string, ticket: Ticket) => {
+                return (
+                    <span>
+                        <Button type="link" onClick={event => props.selectTicket(ticket)}>View</Button>
+                    </span>
+                )
+            }
+        }
     ];
 
-    return (
-        <Table
-            className="tickets-table"
-            dataSource={props.tickets}
-            columns={columns}
-            locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
-            tableLayout="fixed"
-            loading={props.loading}
-            pagination={{
-                defaultPageSize: 9
-            }}
-            onRow={(record, rowIndex) => {
-                return {
-                    onClick: event => props.selectTicket(record),
-                };
-            }}
-        />
-    )
+return (
+    <Table
+        className="tickets-table"
+        dataSource={props.tickets}
+        columns={columns}
+        locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
+        tableLayout="fixed"
+        loading={props.loading}
+        pagination={{
+            defaultPageSize: 9,
+            hideOnSinglePage: true
+        }}
+    />
+)
 
 }
 
