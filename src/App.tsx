@@ -106,7 +106,7 @@ const App = (props: Props) => {
                       <Button key="back" onClick={() => props.selectTicket(null)}>
                         Cancel
                       </Button>,
-                      <Button key="submit" type="primary" onClick={() =>props.resolveTicket(props.ticketSelected) }>
+                      <Button key="submit" type="primary" onClick={() => props.resolveTicket(props.ticketSelected)}>
                         Resolve
                       </Button>,
                     ]}
@@ -115,7 +115,7 @@ const App = (props: Props) => {
                     <p><span>Description: </span>{props.ticketSelected?.description}</p>
                     <p><span>Submited: </span>{moment(props.ticketSelected?.createdAt).format('MM/DD/YYYY')} ({moment(props.ticketSelected?.createdAt).fromNow()})</p>
                     <p><span>Status: </span>{<Tag color={resolveTicketColor(props.ticketSelected?.status, props.ticketSelected?.createdAt)}>{props.ticketSelected?.status}</Tag>}</p>
-                    <p>{props.ticketSelected?.tags.split(',').map((tag: string) => <Tag color="blue">{tag}</Tag>)}</p>
+                    <p>{props.ticketSelected?.tags.split(',').map((tag: string, index: number) => <Tag key={index} color="blue">{tag}</Tag>)}</p>
                   </Modal>
                 }
               </Col>

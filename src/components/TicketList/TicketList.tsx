@@ -53,8 +53,7 @@ const TicketList = (props: PropsFromRedux) => {
                         >
                             <Tag className="clickable" color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
                         </Popconfirm>
-                    ) : (<Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>
-                        )
+                    ) : (<Tag color={resolveTicketColor(props.status, props.createdAt)}>{props.status}</Tag>)
                 }
             </>
         )
@@ -66,11 +65,14 @@ const TicketList = (props: PropsFromRedux) => {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
+            width: '35%',
+            ellipsis: true
         },
         {
             title: 'Submited',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            width: '20%',
             ellipsis: true,
             render: (date: string) => <CreatedAt date={date} />
 
@@ -79,12 +81,15 @@ const TicketList = (props: PropsFromRedux) => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            width: '25%',
             ellipsis: true,
             render: (status: string, record: Ticket) => <TicketTag status={status} createdAt={record.createdAt} ticket={record} />
         },
         {
             title: 'Action',
             key: 'action',
+            width: '20%',
+            ellipsis: true,
             render: (text: string, ticket: Ticket) => {
                 return (
                     <span>
@@ -104,7 +109,7 @@ return (
         tableLayout="fixed"
         loading={props.loading}
         pagination={{
-            defaultPageSize: 9,
+            defaultPageSize: 10,
             hideOnSinglePage: true
         }}
     />
