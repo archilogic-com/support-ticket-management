@@ -4,7 +4,6 @@ import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
 import { Row, Col, Layout, Select, Button, Divider, Drawer } from 'antd';
 import TicketList from 'components/TicketList/TicketList';
-import { assignSpacesToTickets } from 'data/ticketsData'
 import { TicketsState, initTickets, setTickets, filterTicketsBySpaceId, selectTicket, filterByStatus } from 'reducers/tickets';
 import { SpacesState, selectSpace } from 'reducers/spaces';
 const { Header, Footer, Content } = Layout;
@@ -48,20 +47,17 @@ const App = (props: Props) => {
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
-    console.log('spaces', spaces)
-    const tickets = assignSpacesToTickets(spaces)
-    props.initTickets(tickets)
+    props.initTickets(spaces)
   }
-
 
   return (
     <Layout>
-      <Header className="header">
+      <Header className="header" >
         <div className="logo">Ticket Management</div>
       </Header>
       <Content className="content">
         <Row className="floorplan-row"  gutter={[0, 0]}>
-          <Col xs={24} lg={16} style={{ height: '100%' }} >
+          <Col xs={24} sm={24} lg={16} style={{ height: '100%' }} >
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
@@ -70,7 +66,7 @@ const App = (props: Props) => {
               />
             }
           </Col>
-          <Col xs={24} lg={8} className="side">
+          <Col xs={24} sm={24} lg={8} className="side">
             <Row>
               <Col xs={24} lg={24} className="filters-container">
                 <Select style={{ width: 120 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >

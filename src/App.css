@@ -4,6 +4,9 @@ body, #root, .App, .ant-layout {
 
 .header{
   background-color: rgb(40, 44, 52);
+  /* position: 'fixed';
+  z-index: 1;
+  width: '100%'; */
 }
 
 .side{

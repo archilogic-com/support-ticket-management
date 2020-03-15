@@ -89,9 +89,10 @@ const TicketList = (props: PropsFromRedux) => {
             className="tickets-table"
             dataSource={props.tickets}
             columns={columns}
-            pagination={false}
             locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
-            tableLayout="auto"
+            tableLayout="fixed"
+            loading={props.loading}
+            pagination={false}
             onRow={(record, rowIndex) => {
                 return {
                     onClick: event => props.selectTicket(record),
@@ -103,7 +104,7 @@ const TicketList = (props: PropsFromRedux) => {
 }
 
 const mapState = (state: RootState) => ({
-
+    loading: state.tickets.loading
 })
 
 const mapDispatch = {
