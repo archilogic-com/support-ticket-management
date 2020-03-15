@@ -11,7 +11,8 @@ import {
   filterTicketsBySpaceId,
   selectTicket,
   filterByStatus,
-  resolveTicket
+  resolveTicket,
+  filterByDaysRange
 } from 'reducers/tickets';
 import { SpacesState, selectSpace } from 'reducers/spaces';
 import moment from 'moment';
@@ -54,6 +55,14 @@ const App = (props: Props) => {
     props.filterByStatus(value)
 
   }
+  const onDaysFilterChange = (value: string) => {
+    // if (value === 'all') {
+    //   props.setTickets(props.originalTickets)
+    //   return
+    // }
+    props.filterByDaysRange(value)
+
+  }
 
   const onSpacesLoaded = (spaces: any[]) => {
     props.initTickets(spaces)
@@ -70,7 +79,7 @@ const App = (props: Props) => {
             {sceneId &&
               <FloorPlan
                 sceneId={sceneId}
-                tickets={props.originalTickets}
+                tickets={props.daysRangeFilter ? props.tickets : props.originalTickets}
                 onSpacesLoaded={onSpacesLoaded}
               />
             }
@@ -84,7 +93,7 @@ const App = (props: Props) => {
                   <Option value="Resolved">Resolved</Option>
                 </Select>
                 <Divider type="vertical" />
-                <Select style={{ width: 120 }} placeholder="Time range" size="small" >
+                <Select style={{ width: 120 }} value={props.daysRangeFilter} placeholder="Time range" onChange={onDaysFilterChange} size="small" >
                   <Option value="0-24">0 - 24 hours</Option>
                   <Option value="24-36">24 - 36 hours</Option>
                   <Option value="36-48">36 - 48 hours</Option>
@@ -140,6 +149,7 @@ const mapState = (state: RootState) => ({
   ticketSelected: state.tickets.ticketSelected,
   filterApplied: state.tickets.filterApplied,
   status: state.tickets.status,
+  daysRangeFilter: state.tickets.daysRangeFilter
 })
 
 const mapDispatch = {
@@ -149,7 +159,8 @@ const mapDispatch = {
   selectSpace,
   selectTicket,
   filterByStatus,
-  resolveTicket
+  resolveTicket,
+  filterByDaysRange
 }
 
 const connector = connect(mapState, mapDispatch)

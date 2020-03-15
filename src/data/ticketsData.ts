@@ -6,7 +6,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Patrick Alec',
         title: 'Main door is broken',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-11 16:40',
+        createdAt: '2020-03-14 16:40',
         status: 'Open',
         tags: 'Other',
         spaceId: undefined
@@ -16,7 +16,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Louisa Lexine',
         title: 'A/C wont turn on',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-10 12:32',
+        createdAt: '2020-03-14 12:32',
         status: 'Open',
         tags: 'Heat/Air',
         spaceId: undefined
@@ -26,7 +26,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Joe',
         title: 'Wall decal in bad condition',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-10 12:32',
+        createdAt: '2020-03-15 12:32',
         status: 'Open',
         tags: 'Maintenance,Decoration',
         spaceId: undefined
@@ -36,7 +36,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Patrick Alec',
         title: 'Power outlet not working',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-08 10:04',
+        createdAt: '2020-03-11 10:04',
         status: 'Resolved',
         tags: 'Maintenance,Electrical',
         spaceId: undefined
@@ -46,7 +46,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Juio',
         title: 'Power outlet not working',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-03 10:04',
+        createdAt: '2020-03-11 10:04',
         status: 'Resolved',
         tags: 'Maintenance,Electrical',
         spaceId: undefined
@@ -56,7 +56,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Pablo',
         title: 'Power outlet not working',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-03 10:04',
+        createdAt: '2020-03-13 10:04',
         status: 'Resolved',
         tags: 'Maintenance,Electrical',
         spaceId: undefined
@@ -66,7 +66,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Michaela Van',
         title: 'Toilet don\'t flush',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-11 15:00',
+        createdAt: '2020-03-14 15:00',
         status: 'Open',
         tags: 'Maintenance,Plumbing',
         spaceId: undefined
@@ -76,7 +76,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Star Mathew',
         title: 'Two chairs missing',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-12 15:00',
+        createdAt: '2020-03-15 15:00',
         status: 'Open',
         tags: 'Maintenance,Furniture',
         spaceId: undefined
@@ -86,7 +86,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Star Mathew',
         title: 'A/C wont turn on',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-12 15:06',
+        createdAt: '2020-03-13 15:06',
         status: 'Open',
         tags: 'Heat/Air,Maintenance',
         spaceId: undefined
@@ -96,7 +96,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Michaela Van',
         title: 'Microwave not working',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-12 13:58',
+        createdAt: '2020-03-14 13:58',
         status: 'Open',
         tags: 'Maintenance,Eectrical',
         spaceId: undefined
@@ -106,7 +106,7 @@ export const tickets: Ticket[] = [
         submitedBy: 'Star Mathew',
         title: 'A/C wont turn on',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lobortis pharetra nisl, vitae vulputate est auctor et. Quisque finibus aliquam dapibus',
-        createdAt: '2020-03-13 10:06',
+        createdAt: '2020-03-12 10:06',
         status: 'Open',
         tags: 'Heat/Air,Maintenance',
         spaceId: undefined
