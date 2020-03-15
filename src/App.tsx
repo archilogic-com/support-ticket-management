@@ -52,7 +52,7 @@ const App = (props: Props) => {
 
   return (
     <Layout>
-      <Header className="header" >
+      <Header className="header">
         <div className="logo">Ticket Management</div>
       </Header>
       <Content className="content">

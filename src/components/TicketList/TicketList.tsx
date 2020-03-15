@@ -92,7 +92,9 @@ const TicketList = (props: PropsFromRedux) => {
             locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
             tableLayout="fixed"
             loading={props.loading}
-            pagination={false}
+            pagination={{
+                defaultPageSize: 9
+            }}
             onRow={(record, rowIndex) => {
                 return {
                     onClick: event => props.selectTicket(record),
