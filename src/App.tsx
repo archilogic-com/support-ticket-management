@@ -2,7 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import FloorPlan from 'components/FloorPlan/FloorPlan'
 import './App.css';
-import { Row, Col, Layout, Select, Button, Divider, Drawer, Modal, Tag } from 'antd';
+import {
+  Row,
+  Col,
+  Layout,
+  Select,
+  Button,
+  Divider,
+  Modal,
+  Tag
+} from 'antd';
 import TicketList, { resolveTicketColor } from 'components/TicketList/TicketList';
 import {
   TicketsState,
@@ -56,12 +65,7 @@ const App = (props: Props) => {
 
   }
   const onDaysFilterChange = (value: string) => {
-    // if (value === 'all') {
-    //   props.setTickets(props.originalTickets)
-    //   return
-    // }
     props.filterByDaysRange(value)
-
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
@@ -113,9 +117,12 @@ const App = (props: Props) => {
                     className="ticket-modal"
                     footer={[
                       <Button key="back" onClick={() => props.selectTicket(null)}>
-                        Cancel
+                        Close
                       </Button>,
-                      <Button key="submit" type="primary" onClick={() => props.resolveTicket(props.ticketSelected)}>
+                      <Button key="submit" type="primary" onClick={() => {
+                        props.resolveTicket(props.ticketSelected)
+                        props.selectTicket(null)
+                      }}>
                         Resolve
                       </Button>,
                     ]}

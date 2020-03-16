@@ -2,12 +2,22 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux'
 import { selectTicket, resolveTicket } from 'reducers/tickets'
 import { RootState } from 'App';
-import { Table, Empty, Tag, Tooltip, Popconfirm, Button } from 'antd';
-import moment from 'moment'
-import { TicketTagProps, CreatedAtProps, Ticket } from 'shared/interfaces'
 import {
-    EyeOutlined
-} from '@ant-design/icons';
+    Table,
+    Empty,
+    Tag,
+    Tooltip,
+    Popconfirm,
+    Button
+} from 'antd';
+
+import {
+    TicketTagProps,
+    CreatedAtProps,
+    Ticket
+} from 'shared/interfaces'
+import moment from 'moment'
+
 import './TicketList.css';
 
 interface TicketListProps {
@@ -100,20 +110,20 @@ const TicketList = (props: PropsFromRedux) => {
         }
     ];
 
-return (
-    <Table
-        className="tickets-table"
-        dataSource={props.tickets}
-        columns={columns}
-        locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
-        tableLayout="fixed"
-        loading={props.loading}
-        pagination={{
-            defaultPageSize: 10,
-            hideOnSinglePage: true
-        }}
-    />
-)
+    return (
+        <Table
+            className="tickets-table"
+            dataSource={props.tickets}
+            columns={columns}
+            locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No tickets" /> }}
+            tableLayout="fixed"
+            loading={props.loading}
+            pagination={{
+                defaultPageSize: 10,
+                hideOnSinglePage: true
+            }}
+        />
+    )
 
 }
 
