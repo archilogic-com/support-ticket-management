@@ -23,6 +23,8 @@ import {
   resolveTicket,
   filterByDaysRange
 } from 'reducers/tickets';
+
+import { fetchFloor, FloorState } from 'reducers/floor'
 import { SpacesState, selectSpace } from 'reducers/spaces';
 import moment from 'moment';
 const { Header, Footer, Content } = Layout;
@@ -41,6 +43,13 @@ const App = (props: Props) => {
     const demoSceneId = scene || '415a1828-3aab-4559-a060-55713a1360c8';
     setSceneId(demoSceneId)
   }, [])
+
+  useEffect(() => {
+    if(!sceneId){
+      return
+    }
+    props.fetchFloor(sceneId)
+  }, [sceneId])
 
 
   useEffect(() => {
@@ -75,7 +84,7 @@ const App = (props: Props) => {
   return (
     <Layout>
       <Header className="header">
-        <div className="logo">Ticket Management</div>
+        <div className="logo">Ticket Management {props.floorName}</div>
       </Header>
       <Content className="content">
         <Row className="floorplan-row" gutter={[0, 0]}>
@@ -147,6 +156,7 @@ const App = (props: Props) => {
 export interface RootState {
   tickets: TicketsState
   spaces: SpacesState
+  floor: FloorState
 }
 
 const mapState = (state: RootState) => ({
@@ -156,7 +166,8 @@ const mapState = (state: RootState) => ({
   ticketSelected: state.tickets.ticketSelected,
   filterApplied: state.tickets.filterApplied,
   status: state.tickets.status,
-  daysRangeFilter: state.tickets.daysRangeFilter
+  daysRangeFilter: state.tickets.daysRangeFilter,
+  floorName: state.floor.name
 })
 
 const mapDispatch = {
@@ -167,7 +178,8 @@ const mapDispatch = {
   selectTicket,
   filterByStatus,
   resolveTicket,
-  filterByDaysRange
+  filterByDaysRange,
+  fetchFloor
 }
 
 const connector = connect(mapState, mapDispatch)

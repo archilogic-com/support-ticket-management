@@ -19,3 +19,5 @@ export const SELECT_SAPCE = 'SELECT_SPACE'
 export const SELECT_TICKET = 'SELECT_TICKET'
 
 export const RESOLVE_TICKET = 'RESOLVE_TICKET'
+
+export const GET_FLOOR = 'GET_FLOOR'
