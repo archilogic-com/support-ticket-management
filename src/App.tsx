@@ -21,7 +21,8 @@ import {
   selectTicket,
   filterByStatus,
   resolveTicket,
-  filterByDaysRange
+  filterByDaysRange,
+  fetchTicketsFromSpaces
 } from 'reducers/tickets';
 
 import { fetchFloor, FloorState } from 'reducers/floor'
@@ -78,7 +79,7 @@ const App = (props: Props) => {
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
-    props.initTickets(spaces)
+    props.fetchTicketsFromSpaces(sceneId)
   }
 
   return (
@@ -179,7 +180,8 @@ const mapDispatch = {
   filterByStatus,
   resolveTicket,
   filterByDaysRange,
-  fetchFloor
+  fetchFloor,
+  fetchTicketsFromSpaces
 }
 
 const connector = connect(mapState, mapDispatch)

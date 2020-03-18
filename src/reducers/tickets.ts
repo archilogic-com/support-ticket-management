@@ -1,5 +1,5 @@
 import moment from 'moment'
-
+import axios from 'axios'
 import {
     INIT_TICKETS,
     SET_TICKETS,
@@ -47,7 +47,7 @@ const sortCriteria = (a: Ticket, b: Ticket) => (a.status > b.status) ? 1 : (a.st
 const tickets = (state = initialState, action: Action) => {
     switch (action.type) {
         case INIT_TICKETS:
-            const tickets = assignSpacesToTickets(action.spaces).sort(sortCriteria)
+            const tickets = action.tickets.sort(sortCriteria)
             return {
                 ...state,
                 tickets: tickets,
@@ -114,8 +114,8 @@ const markTicketAsResolved = (tickets: Ticket[], key: string) => {
 }
 
 
-export const initTickets = (spaces: any[]) => {
-    return { type: INIT_TICKETS, spaces }
+export const initTickets = (tickets: Ticket[]) => {
+    return { type: INIT_TICKETS, tickets }
 }
 
 export const setTickets = (tickets: Ticket[]) => {
@@ -143,6 +143,25 @@ export const resolveTicket = (ticket: Ticket | null) => {
     return { type: RESOLVE_TICKET, ticket }
 }
 
+export const fetchTicketsFromSpaces = (floorId: any) => (dispatch: any) => {
+    // call action fetching florr
+    // dispatch()
+    return axios.get(`/v1/space?floorId=${floorId}`).then( response => {
+        console.log(response.data.features)
+        const tickets = response.data.features.flatMap((feature: any) => {
+            if(feature.properties.customFields && feature.properties.customFields.tickets){
+                return feature.properties.customFields.tickets.tickets.map((ticket: Ticket) => {
+                    ticket['spaceId'] = feature.id
+                    return ticket
+                })
+            }
+        }).filter( (data: any[]) => data !== undefined)
+        console.log(tickets)
+        dispatch(initTickets(tickets))
+    }).catch( error=>{
+        console.log(error)
+    })
+}
 
 
 export default tickets

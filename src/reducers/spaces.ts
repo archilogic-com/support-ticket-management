@@ -2,6 +2,7 @@ import {
     SET_SPACES,
     SELECT_SAPCE
 } from './actions'
+import { Ticket } from 'shared/interfaces'
 
 export interface SpacesState {
     spaces: any[]
@@ -41,6 +42,5 @@ export const setSpaces = (spaces: any[]) => {
 export const selectSpace = (space: any) => {
     return { type: SELECT_SAPCE, space}
 }
-
 
 export default spaces
