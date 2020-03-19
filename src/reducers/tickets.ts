@@ -11,6 +11,9 @@ import {
 } from './actions'
 import { Ticket } from 'shared/interfaces'
 import { assignSpacesToTickets } from 'data/ticketsData'
+import { Modal } from 'antd'
+import spaces from './spaces'
+const { confirm } = Modal;
 
 export interface TicketsState {
     originalTickets: Ticket[]
@@ -19,7 +22,7 @@ export interface TicketsState {
     filterApplied: boolean
     status: string
     loading: boolean,
-    daysRangeFilter?: string 
+    daysRangeFilter?: string
 }
 
 interface Action {
@@ -59,7 +62,7 @@ const tickets = (state = initialState, action: Action) => {
                 ...state,
                 tickets: action.tickets,
                 filterApplied: false,
-                daysRangeFilter:undefined,
+                daysRangeFilter: undefined,
                 status: 'all'
             }
         case FILTER_BY_SPACE_ID:
@@ -80,10 +83,12 @@ const tickets = (state = initialState, action: Action) => {
             const hoursRange = action.days.split('-')
             return {
                 ...state,
-                tickets: state.originalTickets.filter((ticket) => {
+                tickets: state.originalTickets.filter((ticket: Ticket) => {
                     const ticketDuration = moment.duration(moment().diff(ticket.createdAt))
                     const ticketDurationInHours = Math.floor(ticketDuration.asHours())
-                    return ticketDurationInHours >= hoursRange[0] && ticketDurationInHours <= hoursRange[1]
+                    let condition = hoursRange[1] > 0 ? ticketDurationInHours >= hoursRange[0] && ticketDurationInHours <= hoursRange[1] : ticketDurationInHours >= hoursRange[0]
+                    console.log(ticketDurationInHours, hoursRange[0], hoursRange[1])
+                    return condition
                 }),
                 filterApplied: true,
                 daysRangeFilter: action.days
@@ -96,18 +101,18 @@ const tickets = (state = initialState, action: Action) => {
         case RESOLVE_TICKET:
             return {
                 ...state,
-                tickets: markTicketAsResolved(state.tickets, action.ticket.key).sort(sortCriteria),
-                originalTickets: markTicketAsResolved(state.originalTickets, action.ticket.key).sort(sortCriteria)
+                tickets: updateTicketStatus(state.tickets, action.ticket.key, 'Resolved').sort(sortCriteria),
+                originalTickets: updateTicketStatus(state.originalTickets, action.ticket.key, 'Resolved').sort(sortCriteria)
             }
         default:
             return state
     }
 }
 
-const markTicketAsResolved = (tickets: Ticket[], key: string) => {
+const updateTicketStatus = (tickets: Ticket[], key: string, status: string) => {
     return tickets.map((ticket: Ticket) => {
         if (ticket.key === key) {
-            ticket.status = 'Resolved'
+            ticket.status = status
         }
         return ticket
     })
@@ -136,29 +141,54 @@ export const filterByStatus = (status: string) => {
 }
 
 export const filterByDaysRange = (days: any) => {
-    return {type:FILTER_TICKET_BY_DAYS_RANGE, days}
+    return { type: FILTER_TICKET_BY_DAYS_RANGE, days }
 }
 
-export const resolveTicket = (ticket: Ticket | null) => {
+export const flagTicketAsResolved = (ticket: Ticket) => {
     return { type: RESOLVE_TICKET, ticket }
 }
 
-export const fetchTicketsFromSpaces = (floorId: any) => (dispatch: any) => {
+export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => { 
+    let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId )
+    spaceTickets = updateTicketStatus(spaceTickets, ticket.key, 'Resolved')
+    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {tickets: spaceTickets}).then( (response: any) => {
+        dispatch(flagTicketAsResolved(ticket))
+    })
+}
+
+
+
+export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispatch: any) => {
     // call action fetching florr
     // dispatch()
-    return axios.get(`/v1/space?floorId=${floorId}`).then( response => {
+    return axios.get(`/v1/space?floorId=${floorId}`).then(response => {
         console.log(response.data.features)
         const tickets = response.data.features.flatMap((feature: any) => {
-            if(feature.properties.customFields && feature.properties.customFields.tickets){
+            // axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
+            if (feature.properties.customFields && feature.properties.customFields.tickets) {
                 return feature.properties.customFields.tickets.tickets.map((ticket: Ticket) => {
                     ticket['spaceId'] = feature.id
                     return ticket
                 })
             }
-        }).filter( (data: any[]) => data !== undefined)
+        }).filter((data: any[]) => data !== undefined)
+        console.log(tickets.length)
+        if (tickets.length == 0) {
+            confirm({
+                title: 'Generate tickets for this floorplan?',
+                content: 'Page will reload after the process is done',
+                onOk() {
+                    assignSpacesToTickets(spaces, true)
+                },
+                onCancel() {
+                    console.log('Cancel');
+                },
+            });
+        }
+
         console.log(tickets)
         dispatch(initTickets(tickets))
-    }).catch( error=>{
+    }).catch(error => {
         console.log(error)
     })
 }

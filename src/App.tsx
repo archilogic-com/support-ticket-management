@@ -28,6 +28,7 @@ import {
 import { fetchFloor, FloorState } from 'reducers/floor'
 import { SpacesState, selectSpace } from 'reducers/spaces';
 import moment from 'moment';
+import { assignSpacesToTickets } from 'data/ticketsData';
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
@@ -46,7 +47,7 @@ const App = (props: Props) => {
   }, [])
 
   useEffect(() => {
-    if(!sceneId){
+    if (!sceneId) {
       return
     }
     props.fetchFloor(sceneId)
@@ -79,7 +80,9 @@ const App = (props: Props) => {
   }
 
   const onSpacesLoaded = (spaces: any[]) => {
-    props.fetchTicketsFromSpaces(sceneId)
+    props.fetchTicketsFromSpaces(sceneId, spaces)
+    // assignSpacesToTickets(spaces)
+
   }
 
   return (
@@ -112,7 +115,7 @@ const App = (props: Props) => {
                   <Option value="24-36">24 - 36 hours</Option>
                   <Option value="36-48">36 - 48 hours</Option>
                   <Option value="48-72">48 - 72 hours</Option>
-                  <Option value="72-more">> 72 hours</Option>
+                  <Option value="72-0">> 72 hours</Option>
                 </Select>
                 <Divider type="vertical" />
                 <Button size="small" danger onClick={onClearFilters} disabled={!props.filterApplied}>Clear</Button>
@@ -130,8 +133,10 @@ const App = (props: Props) => {
                         Close
                       </Button>,
                       <Button key="submit" type="primary" onClick={() => {
-                        props.resolveTicket(props.ticketSelected)
-                        props.selectTicket(null)
+                        if (props.ticketSelected) {
+                          props.resolveTicket(props.ticketSelected, props.originalTickets)
+                          props.selectTicket(null)
+                        }
                       }}>
                         Resolve
                       </Button>,

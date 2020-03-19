@@ -46,7 +46,7 @@ const TicketList = (props: PropsFromRedux) => {
 
 
     const onConfirm = (ticket: Ticket): any => {
-        props.resolveTicket(ticket)
+        props.resolveTicket(ticket, props.originalTickets)
     }
 
     const TicketTag = (props: TicketTagProps) => {
@@ -128,7 +128,8 @@ const TicketList = (props: PropsFromRedux) => {
 }
 
 const mapState = (state: RootState) => ({
-    loading: state.tickets.loading
+    loading: state.tickets.loading,
+    originalTickets: state.tickets.originalTickets
 })
 
 const mapDispatch = {

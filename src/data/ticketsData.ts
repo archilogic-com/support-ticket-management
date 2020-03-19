@@ -1,4 +1,6 @@
 import { Ticket } from "shared/interfaces";
+import axios from "axios";
+import moment from "moment";
 
 export const tickets: Ticket[] = [
     {
@@ -123,7 +125,7 @@ export const tickets: Ticket[] = [
     }
 ];
 
-export const assignSpacesToTickets = (spaces: any[]) => {
+export const assignSpacesToTickets = (spaces: any[], reloadWhenDone = false) => {
     spaces.forEach((space: any) => {
         const dice = Math.floor(Math.random() * 10)
         if (dice > 0 && (space.usage === 'Work' || space.usage === 'Work' || space.usage === 'Kitchen' || space.usage === 'Common' || space.usage === 'Bathroom')) {
@@ -139,9 +141,25 @@ export const assignSpacesToTickets = (spaces: any[]) => {
                         randomTicket['spaceId'] = space.node.id
                     }
                 }
+
+                randomTicket['createdAt'] = moment().subtract(getRandomInt(2) + 1, 'days').format('YYYY-MM-DD LT')
+
             }
+
         }
     })
 
-    return tickets
+    const requests = tickets.filter((ticket: Ticket) => { return ticket.spaceId !== undefined}).map( (ticket: Ticket) => {
+       return axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {tickets: [ticket]})
+    })
+
+    axios.all(requests).then(axios.spread( (reponse) => {
+        if(reloadWhenDone){
+            window.location.reload()
+        }
+    }));
 }
+
+const getRandomInt = (max: number) => {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
