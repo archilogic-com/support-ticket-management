@@ -8,7 +8,8 @@ import {store} from 'config/store'
 import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
 
-axios.defaults.baseURL="http://localhost:3000"
+axios.defaults.baseURL= process.env.REACT_APP_API_BASE_URL || "http://localhost:3000"
+
 
 ReactDOM.render(
     <Provider store={store}>
