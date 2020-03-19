@@ -125,6 +125,7 @@ export const tickets: Ticket[] = [
     }
 ];
 
+// THIS IS ONLY FOR DEMO PURPOSE 
 export const assignSpacesToTickets = (spaces: any[], reloadWhenDone = false) => {
     spaces.forEach((space: any) => {
         const dice = Math.floor(Math.random() * 10)

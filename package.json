@@ -26,6 +26,8 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
+    "dev": "npm run init-server & react-scripts start ",
+    "init-server": "node ./backend/server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

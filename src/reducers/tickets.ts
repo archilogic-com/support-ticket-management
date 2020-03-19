@@ -7,7 +7,9 @@ import {
     SELECT_TICKET,
     FILTER_TICKETS_BY_STATUS,
     RESOLVE_TICKET,
-    FILTER_TICKET_BY_DAYS_RANGE
+    FILTER_TICKET_BY_DAYS_RANGE,
+    START_RESOLVE_TICKET,
+    END_RESOLVE_TICKET
 } from './actions'
 import { Ticket } from 'shared/interfaces'
 import { assignSpacesToTickets } from 'data/ticketsData'
@@ -98,6 +100,16 @@ const tickets = (state = initialState, action: Action) => {
                 ...state,
                 ticketSelected: action.ticket,
             }
+        case START_RESOLVE_TICKET:
+            return {
+                ...state,
+                loading: true
+            }
+        case END_RESOLVE_TICKET:
+            return {
+                ...state,
+                loading: false
+            }
         case RESOLVE_TICKET:
             return {
                 ...state,
@@ -148,23 +160,30 @@ export const flagTicketAsResolved = (ticket: Ticket) => {
     return { type: RESOLVE_TICKET, ticket }
 }
 
-export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => { 
-    let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId )
+export const startResolvingTicket = () => {
+    return { type: START_RESOLVE_TICKET }
+}
+
+export const endResolvingTicket = () => {
+    return { type: END_RESOLVE_TICKET }
+}
+
+export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => {
+    dispatch(startResolvingTicket())
+    let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId)
     spaceTickets = updateTicketStatus(spaceTickets, ticket.key, 'Resolved')
-    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {tickets: spaceTickets}).then( (response: any) => {
+    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, { tickets: spaceTickets }).then((response: any) => {
         dispatch(flagTicketAsResolved(ticket))
+    }).finally(() => {
+        dispatch(endResolvingTicket())
     })
 }
 
-
-
 export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispatch: any) => {
-    // call action fetching florr
-    // dispatch()
     return axios.get(`/v1/space?floorId=${floorId}`).then(response => {
         console.log(response.data.features)
         const tickets = response.data.features.flatMap((feature: any) => {
-            // axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
+            //  axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
             if (feature.properties.customFields && feature.properties.customFields.tickets) {
                 return feature.properties.customFields.tickets.tickets.map((ticket: Ticket) => {
                     ticket['spaceId'] = feature.id
