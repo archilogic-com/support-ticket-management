@@ -14,7 +14,6 @@ import {
 import { Ticket } from 'shared/interfaces'
 import { assignSpacesToTickets } from 'data/ticketsData'
 import { Modal } from 'antd'
-import spaces from './spaces'
 const { confirm } = Modal;
 
 export interface TicketsState {
@@ -89,7 +88,6 @@ const tickets = (state = initialState, action: Action) => {
                     const ticketDuration = moment.duration(moment().diff(ticket.createdAt))
                     const ticketDurationInHours = Math.floor(ticketDuration.asHours())
                     let condition = hoursRange[1] > 0 ? ticketDurationInHours >= hoursRange[0] && ticketDurationInHours <= hoursRange[1] : ticketDurationInHours >= hoursRange[0]
-                    console.log(ticketDurationInHours, hoursRange[0], hoursRange[1])
                     return condition
                 }),
                 filterApplied: true,
@@ -129,7 +127,6 @@ const updateTicketStatus = (tickets: Ticket[], key: string, status: string) => {
         return ticket
     })
 }
-
 
 export const initTickets = (tickets: Ticket[]) => {
     return { type: INIT_TICKETS, tickets }
@@ -181,7 +178,6 @@ export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: a
 
 export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispatch: any) => {
     return axios.get(`/v1/space?floorId=${floorId}`).then(response => {
-        console.log(response.data.features)
         const tickets = response.data.features.flatMap((feature: any) => {
             //  axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
             if (feature.properties.customFields && feature.properties.customFields.tickets) {
@@ -191,7 +187,6 @@ export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispa
                 })
             }
         }).filter((data: any[]) => data !== undefined)
-        console.log(tickets.length)
         if (tickets.length == 0) {
             confirm({
                 title: 'Generate tickets for this floorplan?',
@@ -200,12 +195,11 @@ export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispa
                     assignSpacesToTickets(spaces, true)
                 },
                 onCancel() {
-                    console.log('Cancel');
+                    // Do nothing
                 },
             });
         }
 
-        console.log(tickets)
         dispatch(initTickets(tickets))
     }).catch(error => {
         console.log(error)

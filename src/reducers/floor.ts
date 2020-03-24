@@ -30,7 +30,6 @@ export const receiveFloor = (data: any) => {
 
 export const fetchFloor = (floorId: any) => (dispatch: any) => {
     return axios.get(`/v1/floor/${floorId}`).then( response => {
-        console.log(response.data)
         dispatch(receiveFloor(response.data))
     }).catch( error=>{
         console.log(error)

@@ -13,6 +13,7 @@
     "antd": "^4.0.2",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.2",
     "moment": "^2.24.0",
@@ -26,9 +27,9 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "dev": "npm run init-server & react-scripts start ",
+    "dev": "npm run init-server & PORT=3001 react-scripts start ",
     "init-server": "node ./backend/server.js",
-    "start": "react-scripts start",
+    "start": "npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
