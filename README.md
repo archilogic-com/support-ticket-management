@@ -1,4 +1,4 @@
-# Support Ticket Management App Example using Archilogic Floor-Plan
+# Archilogic Support Ticket Management App Example
 
 You can see this demo running [here](https://archilogic-ticket-management.herokuapp.com/)
 
@@ -76,7 +76,7 @@ check file `public\index.html`:
 
 ### Floorplan Initialization
 
-In file `src\components\Floorplan\FloorPlan.tsx` when the sceneId value is available trough props, we initialize the floor-plan attaching it to the DOM element `#floorplan`
+In file `src\components\Floorplan\FloorPlan.tsx` when the sceneId value is available trough props, we initialize the floor-plan and attach it to the DOM element `#floorplan`
 
 ```javascript
 useEffect(() => {
@@ -91,7 +91,7 @@ useEffect(() => {
 
 ### API storage
 
-Tickets in a collection in the client side, and when there is any change to that collection, we push the new updated data to the corresponding space.
+Tickets are stored in a collection on the client side, and when there is any change to that collection, we push the new updated data to the corresponding space.
 
 In order to keep business logic clean we decoupled it into a reducer: `src\reducers\tickets.ts`
 
