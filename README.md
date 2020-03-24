@@ -93,7 +93,7 @@ useEffect(() => {
 
 Tickets in a collection in the client side, and when there is any change to that collection, we push the new updated data to the corresponding space.
 
-In order to keep business logic clean we decoupled it into a reducer: `src\reducers\bookings.ts`
+In order to keep business logic clean we decoupled it into a reducer: `src\reducers\tickets.ts`
 
 ```javascript
 export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => {
