@@ -10,7 +10,8 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 [Axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js.  
 [Ant Design](https://ant.design/) - A UI Design language and React UI library.  
-[Typescript](https://www.typescriptlang.org/) - Optional static type-checking along with the latest ECMAScript features.  
+[Typescript](https://www.typescriptlang.org/) - Optional static type-checking along with the latest ECMAScript features.
+[Redux](https://redux.js.org/) - A Predictable State Container for JS Apps.
 [Moment.js](https://momentjs.com/) - Parse, validate, manipulate, and display dates and times in JavaScript.
 
 ## Install and Run
