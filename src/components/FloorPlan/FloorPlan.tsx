@@ -58,21 +58,13 @@ const FloorPlan = (props: PropsFromRedux) => {
         setLoading(true)
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
         fp.loadScene(props.sceneId).then(() => {
-            props.setSpaces(fp.state.computed.spaces)
-            props.onSpacesLoaded(fp.state.computed.spaces)
+            props.setSpaces(fp.resources.spaces)
+            props.onSpacesLoaded(fp.resources.spaces)
+            fp.on('click', (event: any) => onRoomClick(event, fp)); 
+            
             setLoading(false)
         })
     }, [props.sceneId]);
-
-    useEffect(() => {
-        props.spaces.forEach((space: any) => {
-            document.getElementById(`el-${space.id}`)?.addEventListener("click", (e: any) => {
-                const spaceId = getIdFromEvent(e)
-                const space = findSpaceById(spaceId)
-                props.selectSpace(space)
-            })
-        });
-    }, [props.spaces])
 
     useEffect(() => {
         higlightSpaces()
@@ -86,6 +78,13 @@ const FloorPlan = (props: PropsFromRedux) => {
         higlightSpaces()
 
     }, [props.spaces, props.tickets])
+
+    const onRoomClick = (event: any, floorPlan: any) => {
+        const { spaces } = floorPlan.getResourcesFromPosition(event.pos);
+        if (spaces.length === 0 ) return;
+
+        props.selectSpace(spaces[0]);
+    }
 
 
     const higlightSpaces = () => {
@@ -120,10 +119,6 @@ const FloorPlan = (props: PropsFromRedux) => {
         space.node.setHighlight({
             fill: color
         });
-    }
-
-    const getIdFromEvent = (e: any) => {
-        return e.currentTarget.id.replace('el-', '')
     }
 
     return (<div id="floorplan" style={{ height: '100%', width: '100%' }}></div>)
