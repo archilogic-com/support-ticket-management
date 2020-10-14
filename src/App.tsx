@@ -104,13 +104,13 @@ const App = (props: Props) => {
           <Col xs={24} sm={24} lg={8} className="side">
             <Row>
               <Col xs={24} lg={24} className="filters-container">
-                <Select style={{ width: 100 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
+                <Select data-cy='status' style={{ width: 100 }} value={props.status} defaultValue="all" placeholder="Show" onChange={onStatusChange} size="small" >
                   <Option value="all">All</Option>
                   <Option value="Open">Open</Option>
                   <Option value="Resolved">Resolved</Option>
                 </Select>
                 <Divider type="vertical" />
-                <Select style={{ width: 120 }} value={props.daysRangeFilter} placeholder="Time range" onChange={onDaysFilterChange} size="small" >
+                <Select data-cy='hours' style={{ width: 120 }} value={props.daysRangeFilter} placeholder="Time range" onChange={onDaysFilterChange} size="small" >
                   <Option value="0-24">0 - 24 hours</Option>
                   <Option value="24-36">24 - 36 hours</Option>
                   <Option value="36-48">36 - 48 hours</Option>
