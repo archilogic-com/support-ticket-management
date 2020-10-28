@@ -129,7 +129,7 @@ export const tickets: Ticket[] = [
 export const assignSpacesToTickets = (spaces: any[], reloadWhenDone = false) => {
     spaces.forEach((space: any) => {
         const dice = Math.floor(Math.random() * 10)
-        if (dice > 0 && (space.usage === 'Work' || space.usage === 'Work' || space.usage === 'Kitchen' || space.usage === 'Common' || space.usage === 'Bathroom')) {
+        if (dice > 0 && (space.usage === 'Work' || space.usage === 'work' || space.usage === 'meetingRoom' || space.usage === 'closeWorkspace' || space.usage === 'operate' || space.usage === 'Kitchen' || space.usage === 'kitchen' || space.usage === 'common' || space.usage === 'Common' || space.usage === 'Bathroom'|| space.usage === 'bathroom')) {
             const ticketsToBeAssigned = tickets.filter(ticket => ticket.spaceId === undefined)
             const randomTicket = ticketsToBeAssigned[Math.floor(Math.random() * ticketsToBeAssigned.length)];
 

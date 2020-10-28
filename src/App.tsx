@@ -81,8 +81,7 @@ const App = (props: Props) => {
 
   const onSpacesLoaded = (spaces: any[]) => {
     props.fetchTicketsFromSpaces(sceneId, spaces)
-    // assignSpacesToTickets(spaces)
-
+    //assignSpacesToTickets(spaces)
   }
 
   return (
@@ -115,7 +114,7 @@ const App = (props: Props) => {
                   <Option value="24-36">24 - 36 hours</Option>
                   <Option value="36-48">36 - 48 hours</Option>
                   <Option value="48-72">48 - 72 hours</Option>
-                  <Option value="72-0">> 72 hours</Option>
+                  <Option value="72-0"> 72 hours</Option>
                 </Select>
                 <Divider type="vertical" />
                 <Button size="small" danger onClick={onClearFilters} disabled={!props.filterApplied}>Clear</Button>
