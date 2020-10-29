@@ -10,7 +10,7 @@ declare var FloorPlanEngine: any
 const floorPlanStartupSettings = {
     hideElements: [],
     panZoom: true,
-    planRotation: null,
+    planRotation: 180,
     roomStampSize: null,
     ui: {
         menu: false,
