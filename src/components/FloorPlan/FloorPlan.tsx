@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux'
-import { setSpaces, selectSpace } from 'reducers/spaces'
 import { RootState } from 'App';
-
+import React, { useEffect } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { selectSpace, setSpaces } from 'reducers/spaces';
 import './FloorPlan.css';
+
 
 declare var FloorPlanEngine: any
 
@@ -51,23 +51,22 @@ type PropsFromRedux = FloorPlanProps & ConnectedProps<typeof connector>
 
 const FloorPlan = (props: PropsFromRedux) => {
 
-    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         const container = document.getElementById('floorplan')
-        setLoading(true)
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
         fp.loadScene(props.sceneId).then(() => {
             props.setSpaces(fp.resources.spaces)
             props.onSpacesLoaded(fp.resources.spaces)
-            fp.on('click', (event: any) => onRoomClick(event, fp)); 
-            
-            setLoading(false)
+            fp.on('click', (event: any) => onRoomClick(event, fp));
+
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.sceneId]);
 
     useEffect(() => {
         higlightSpaces()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.selectedSpace])
 
     useEffect(() => {
@@ -76,12 +75,12 @@ const FloorPlan = (props: PropsFromRedux) => {
         }
 
         higlightSpaces()
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.spaces, props.tickets])
 
     const onRoomClick = (event: any, floorPlan: any) => {
         const { spaces } = floorPlan.getResourcesFromPosition(event.pos);
-        if (spaces.length === 0 ) return;
+        if (spaces.length === 0) return;
 
         props.selectSpace(spaces[0]);
     }
@@ -105,12 +104,6 @@ const FloorPlan = (props: PropsFromRedux) => {
         })
     }
 
-    const findSpaceById = (id: string) => {
-        return props.spaces.find(space => {
-            return space.id === id
-        })
-    }
-
 
     const fillSpaceWithColor = (space: any, color?: number[]) => {
         if (space === undefined) {
@@ -128,12 +121,12 @@ const FloorPlan = (props: PropsFromRedux) => {
 const mapState = (state: RootState) => ({
     spaces: state.spaces.spaces,
     selectedSpace: state.spaces.selectedSpace
-  })
-  
-  const mapDispatch = {
-   setSpaces,
-   selectSpace
-  }
-  
-  const connector = connect(mapState, mapDispatch)
-  export default connector(FloorPlan);
+})
+
+const mapDispatch = {
+    setSpaces,
+    selectSpace
+}
+
+const connector = connect(mapState, mapDispatch)
+export default connector(FloorPlan);

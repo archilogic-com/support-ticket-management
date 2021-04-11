@@ -151,7 +151,7 @@ export const assignSpacesToTickets = (spaces: any[], reloadWhenDone = false) => 
     })
 
     const requests = tickets.filter((ticket: Ticket) => { return ticket.spaceId !== undefined}).map( (ticket: Ticket) => {
-       return axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {tickets: [ticket]})
+       return axios.put(`/v2/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {tickets: [ticket]})
     })
 
     axios.all(requests).then(axios.spread( (reponse) => {

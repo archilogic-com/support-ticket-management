@@ -169,7 +169,7 @@ export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: a
     dispatch(startResolvingTicket())
     let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId)
     spaceTickets = updateTicketStatus(spaceTickets, ticket.key, 'Resolved')
-    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, { tickets: spaceTickets }).then((response: any) => {
+    axios.put(`/v2/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, { tickets: spaceTickets }).then((response: any) => {
         dispatch(flagTicketAsResolved(ticket))
     }).finally(() => {
         dispatch(endResolvingTicket())
@@ -177,30 +177,31 @@ export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: a
 }
 
 export const fetchTicketsFromSpaces = (floorId: string, spaces: any[]) => (dispatch: any) => {
-    return axios.get(`/v1/space?floorId=${floorId}`).then(response => {
-        const tickets = response.data.features.flatMap((feature: any) => {
-            //  axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
-            if (feature.properties.customFields && feature.properties.customFields.tickets) {
-                return feature.properties.customFields.tickets.tickets.map((ticket: Ticket) => {
-                    ticket['spaceId'] = feature.id
-                    return ticket
-                })
-            }
-        }).filter((data: any[]) => data !== undefined)
-        if (tickets.length == 0) {
-            confirm({
-                title: 'Generate tickets for this floorplan?',
-                content: 'Page will reload after the process is done',
-                onOk() {
-                    assignSpacesToTickets(spaces, true)
-                },
-                onCancel() {
-                    // Do nothing
-                },
-            });
-        }
+    return axios.get(`/v2/space?floorId=${floorId}`).then(response => {
 
-        dispatch(initTickets(tickets))
+        const spacesIds = response.data.features.map((f: any) => f.id)
+        //  axios.delete(`/v1/space/${feature.id}/custom-field/properties.customFields.tickets`)
+        const allRequests = spacesIds.map((id: string) => axios.get(`/v2/space/${id}/custom-field`))
+        axios.all(allRequests).then(axios.spread((...responses) => {
+            const tickets = responses.filter((r: any) => Array.isArray(r.data.properties?.customFields?.tickets?.tickets)).flatMap((c: any) => c.data.properties?.customFields?.tickets?.tickets)
+
+            if (tickets.length === 0) {
+                confirm({
+                    title: 'Generate tickets for this floorplan?',
+                    content: 'Page will reload after the process is done',
+                    onOk() {
+                        assignSpacesToTickets(spaces, true)
+                    },
+                    onCancel() {
+                        // Do nothing
+                    },
+                });
+            }
+
+            dispatch(initTickets(tickets))
+
+        })).catch(error => { })
+
     }).catch(error => {
         console.log(error)
     })

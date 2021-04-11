@@ -1,34 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux'
-import FloorPlan from 'components/FloorPlan/FloorPlan'
-import './App.css';
 import {
-  Row,
-  Col,
-  Layout,
+  Button, Col,
+  Divider, Layout,
+  Modal, Row,
   Select,
-  Button,
-  Divider,
-  Modal,
   Tag
 } from 'antd';
+import axios from 'axios';
+import FloorPlan from 'components/FloorPlan/FloorPlan';
 import TicketList, { resolveTicketColor } from 'components/TicketList/TicketList';
-import {
-  TicketsState,
-  initTickets,
-  setTickets,
-  filterTicketsBySpaceId,
-  selectTicket,
-  filterByStatus,
-  resolveTicket,
-  filterByDaysRange,
-  fetchTicketsFromSpaces
-} from 'reducers/tickets';
-
-import { fetchFloor, FloorState } from 'reducers/floor'
-import { SpacesState, selectSpace } from 'reducers/spaces';
 import moment from 'moment';
-import { assignSpacesToTickets } from 'data/ticketsData';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { fetchFloor, FloorState } from 'reducers/floor';
+import { selectSpace, SpacesState } from 'reducers/spaces';
+import {
+  fetchTicketsFromSpaces, filterByDaysRange, filterByStatus, filterTicketsBySpaceId, initTickets,
+  resolveTicket, selectTicket, setTickets, TicketsState
+} from 'reducers/tickets';
+import './App.css';
+
 const { Header, Footer, Content } = Layout;
 const { Option } = Select
 
@@ -38,19 +28,46 @@ type Props = PropsFromRedux
 
 const App = (props: Props) => {
   const [sceneId, setSceneId] = useState<any>()
+  const [token, setToken] = useState<string>()
 
+  useLayoutEffect(() => {
+
+    // get temporary token
+    let tempToken: null | string = null
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/temp-token`).then(response => {
+      tempToken = response?.data?.authorization
+      if (!tempToken) return;
+
+      setToken(tempToken)
+
+      axios.interceptors.request.use((config) => {
+        config.params = config.params || {};
+
+        if (tempToken) {
+          config.headers.common['Authorization'] = tempToken;
+        }
+        return config;
+      }, (error) => {
+        console.log(error)
+        return Promise.reject(error);
+      });
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   useEffect(() => {
+    if (!token) return
     const urlParams = new URLSearchParams(window.location.search);
     const scene = urlParams.get('sceneId');
-    const demoSceneId = scene || '415a1828-3aab-4559-a060-55713a1360c8';
+    const demoSceneId = scene || 'b6aa6096-bb77-4872-be25-4886a9e5bf06';
     setSceneId(demoSceneId)
-  }, [])
+  }, [token])
 
   useEffect(() => {
     if (!sceneId) {
       return
     }
     props.fetchFloor(sceneId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sceneId])
 
 
@@ -60,6 +77,7 @@ const App = (props: Props) => {
     }
     props.setTickets(props.originalTickets)
     props.filterTicketsBySpaceId(props.selectedSpace.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.selectedSpace])
 
   const onClearFilters = () => {

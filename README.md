@@ -99,7 +99,7 @@ In order to keep business logic clean we decoupled it into a reducer: `src\reduc
 export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => {
     let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId)
     spaceTickets = updateTicketStatus(spaceTickets, ticket.key, 'Resolved')
-    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {
+    axios.put(`/v2/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {
         tickets: spaceTickets
     }).then((response: any) => {
         dispatch(flagTicketAsResolved(ticket))
