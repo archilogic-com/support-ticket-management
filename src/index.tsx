@@ -1,35 +1,26 @@
+import axios from 'axios';
+import { store } from 'config/store';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { Provider } from 'react-redux'
-import { store } from 'config/store'
-
-import * as serviceWorker from './serviceWorker';
-import axios from 'axios';
 import Media from 'react-media';
+import { Provider } from 'react-redux';
+import App from './App';
+import './index.css';
+import * as serviceWorker from './serviceWorker';
 
 axios.defaults.baseURL = process.env.REACT_APP_ARCHILOGIC_API_URL
-axios.interceptors.request.use((config) => {
-    config.params = config.params || {};
-    config.params['token'] = process.env.REACT_APP_ARCHILOGIC_PUBLISHABLE_API_KEY;
-
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
 
 ReactDOM.render(
     <Provider store={store}>
         <Media query="(max-width: 500px)" render={() =>
-            (
-                <div><img className='device-not-supported' src={require("./warning.png")} alt="" /></div>
-            )}
+        (
+            <div><img className='device-not-supported' src={require("./warning.png")} alt="" /></div>
+        )}
         />
         <Media query="(min-width: 501px)" render={() =>
-            (
-                <App />
-            )}
+        (
+            <App />
+        )}
         />
     </Provider>,
     document.getElementById('root'));

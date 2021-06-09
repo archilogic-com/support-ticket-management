@@ -14,6 +14,23 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 [Redux](https://redux.js.org/) - A Predictable State Container for JS Apps.
 [Moment.js](https://momentjs.com/) - Parse, validate, manipulate, and display dates and times in JavaScript.
 
+## Setup local server 
+
+Navigate to the server folder and run:
+
+    yarn install
+
+The server needs a secret token to negotiate a temporary token.
+
+https://developers.archilogic.com/space-api/v2/introduction.html#secret-access-token
+
+Create a new secret token and add it to the ARCHILOGIC_SECRET_KEY environment variable.
+
+then run:
+
+    node server.js
+
+
 ## Install and Run
 
 In the project directory, you can run:
@@ -99,7 +116,7 @@ In order to keep business logic clean we decoupled it into a reducer: `src\reduc
 export const resolveTicket = (ticket: Ticket, tickets: Ticket[]) => (dispatch: any) => {
     let spaceTickets = tickets.filter((t) => t.spaceId === ticket.spaceId)
     spaceTickets = updateTicketStatus(spaceTickets, ticket.key, 'Resolved')
-    axios.put(`/v1/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {
+    axios.put(`/v2/space/${ticket.spaceId}/custom-field/properties.customFields.tickets`, {
         tickets: spaceTickets
     }).then((response: any) => {
         dispatch(flagTicketAsResolved(ticket))
