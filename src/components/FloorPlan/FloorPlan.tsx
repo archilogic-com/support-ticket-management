@@ -55,7 +55,8 @@ const FloorPlan = (props: PropsFromRedux) => {
     useEffect(() => {
         const container = document.getElementById('floorplan')
         const fp = new FloorPlanEngine(container, floorPlanStartupSettings)
-        fp.loadScene(props.sceneId).then(() => {
+        const publishableToken = process.env.REACT_APP_PUBLISHABLE_TOKEN
+        fp.loadScene(props.sceneId, { publishableToken }).then(() => {
             props.setSpaces(fp.resources.spaces)
             props.onSpacesLoaded(fp.resources.spaces)
             fp.on('click', (event: any) => onRoomClick(event, fp));
